@@ -33,3 +33,4 @@ fmt:
 
 clean:
 	docker-compose down --remove-orphans
+	rm -f agent alert api cli control database
