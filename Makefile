@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 ifeq (, $(shell which docker))
     $(error "No docker in $(PATH)")
 endif
@@ -19,9 +21,7 @@ test:
 	go test ./...
 
 test.integration: test deploy.local
-	. ./test.env
-	echo $DATABASE_HOST
-	go test ./... -tags=integration
+	source ./test.env && go test ./... -tags=integration
 
 deploy.local:
 	docker-compose build
