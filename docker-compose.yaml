@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  database:
+    image: systemstat/database:latest
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./cmd/database/Dockerfile
+      args:
+        buildno: 1
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: systemstat
+    ports:
+      - 5432:5432
+    volumes:
+      - ./scripts/postgres:/var/lib/postgresql/systemstat
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
