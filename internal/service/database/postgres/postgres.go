@@ -3,6 +3,8 @@ package postgres
 import (
 	"fmt"
 
+	"github.com/jsirianni/systemstat/internal/types/account"
+
 	"database/sql"
 	_ "github.com/lib/pq"
 )
@@ -24,7 +26,8 @@ func New() (Postgres, error) {
 		return p, err
 	}
 
-	var conn = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", p.host, p.port, p.user, p.pass, p.dbname)
+	var conn = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		p.host, p.port, p.user, p.pass, p.dbname)
 	var err error
 
 	p.db, err = sql.Open("postgres", conn)
@@ -38,10 +41,10 @@ func (p Postgres) TestConnection() error {
 	return p.db.Ping()
 }
 
-func (p Postgres) Insert() error {
-	return nil
+func (p Postgres) AccountCreate(admin_email string) (account.Account, error) {
+	return account.Account{}, nil
 }
 
-func (p Postgres) Select() (string, error) {
-	return "", nil
+func (p Postgres) AccountConfigureAlert(alertType string, config []byte) (account.Account, error) {
+	return account.Account{}, nil
 }
