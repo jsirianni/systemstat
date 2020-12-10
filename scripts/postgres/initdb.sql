@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS account (
 
     root_api_key UUID NOT NULL DEFAULT gen_random_uuid(),
     alert_type VARCHAR DEFAULT '',
-    alert_config JSON DEFAULT '{}'::json,
+    alert_config JSONB DEFAULT '{}'::jsonb,
 
     admin_email VARCHAR(254) NOT NULL UNIQUE
 );
