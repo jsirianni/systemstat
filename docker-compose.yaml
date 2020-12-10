@@ -8,6 +8,14 @@ services:
       dockerfile: ./cmd/database/Dockerfile
       args:
         buildno: 1
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: systemstat
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+    ports:
+      - 9000:9000
   db:
     image: postgres:13
     restart: always
