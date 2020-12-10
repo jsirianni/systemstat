@@ -13,19 +13,14 @@ func main() {
 		log.Error(err)
 		os.Exit(1)
 	}
-	a, err := d.AccountByEmail("")
-	if err != nil {
-		panic(err)
-	}
-	accountString, err := a.String()
-	if err != nil {
-		panic(err)
-	}
-	alertConfigString, err := a.AlertConfig.String()
-	if err != nil {
-		panic(err)
+
+	server := database.Server{
+		Port: 9000,
+		DB: d,
 	}
 
-	log.Info(accountString)
-	log.Info(alertConfigString)
+	if err := server.Run(); err != nil {
+		log.Fatal(err, 1)
+		os.Exit(1)
+	}
 }
