@@ -13,6 +13,19 @@ func main() {
 		log.Error(err)
 		os.Exit(1)
 	}
-	d.TestConnection()
-	log.Info("working!")
+	a, err := d.AccountByEmail("")
+	if err != nil {
+		panic(err)
+	}
+	accountString, err := a.String()
+	if err != nil {
+		panic(err)
+	}
+	alertConfigString, err := a.AlertConfig.String()
+	if err != nil {
+		panic(err)
+	}
+
+	log.Info(accountString)
+	log.Info(alertConfigString)
 }

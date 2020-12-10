@@ -41,8 +41,15 @@ func (p Postgres) TestConnection() error {
 	return p.db.Ping()
 }
 
-func (p Postgres) AccountCreate(admin_email string) (account.Account, error) {
+func (p Postgres) AccountCreate(email string) (account.Account, error) {
 	return account.Account{}, nil
+}
+
+func (p Postgres) AccountByEmail(email string) (account.Account, error) {
+	q := "SELECT * FROM account WHERE admin_email = 'slack@test.com'"
+	a := account.Account{}
+	err := p.db.QueryRow(q).Scan(&a.AccountID, &a.RootAPIKey, &a.AlertType, &a.AlertConfig, &a.AdminEmail)
+	return a, err
 }
 
 func (p Postgres) AccountConfigureAlert(alertType string, config []byte) (account.Account, error) {

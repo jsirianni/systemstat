@@ -1,6 +1,8 @@
 package account
 
 import (
+    "encoding/json"
+
     "github.com/google/uuid"
 )
 
@@ -16,8 +18,17 @@ type Account struct {
 
     // AlertConfig represents arbitrary json that will be marshalled
     // into the given alert type's configuration
-    AlertConfig map[string]interface{} `db:"alert_config" json:"alert_config"`
+    AlertConfig alertConfig `db:"alert_config" json:"alert_config"`
 
     // Primary contact for the account
     AdminEmail string `db:"admin_email" json:"admin_email"`
+}
+
+func (a Account) JSON() ([]byte, error) {
+    return json.Marshal(a)
+}
+
+func (a Account) String() (string, error) {
+    x, err := a.JSON()
+    return string(x), err
 }

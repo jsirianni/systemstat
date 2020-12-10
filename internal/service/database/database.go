@@ -10,6 +10,7 @@ type Database interface {
 	TestConnection() error
 
 	AccountCreate(email string) (account.Account, error)
+	AccountByEmail(email string) (account.Account, error)
 	AccountConfigureAlert(alertType string, config []byte) (account.Account, error)
 }
 

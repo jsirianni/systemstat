@@ -3,8 +3,9 @@ CREATE TABLE IF NOT EXISTS account (
     PRIMARY KEY (account_id),
 
     root_api_key UUID NOT NULL DEFAULT gen_random_uuid(),
-    alert_type VARCHAR,
-    alert_config JSON,
+    alert_type VARCHAR DEFAULT '',
+    alert_config JSON DEFAULT '{}'::json,
+
     admin_email VARCHAR(254) NOT NULL UNIQUE
 );
 
@@ -13,6 +14,7 @@ CREATE TABLE IF NOT EXISTS key (
     PRIMARY KEY (api_key),
 
     account_id UUID NOT NULL,
+
     FOREIGN KEY (account_id) REFERENCES account (account_id)
 );
 

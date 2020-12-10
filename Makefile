@@ -20,13 +20,14 @@ build.database:
 test:
 	go test ./...
 
-test.integration: test deploy.local
+test.integration: clean test deploy.local
 	source ./test.env && go test ./... -tags=integration
 
 deploy.local:
 	docker-compose build
 	docker-compose up -d && sleep 5
 	docker exec systemstat_db_1 /var/lib/postgresql/systemstat/initdb.sh
+	docker exec systemstat_db_1 /var/lib/postgresql/systemstat/test_data.sh
 
 fmt:
 	go fmt ./...
