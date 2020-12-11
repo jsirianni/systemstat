@@ -12,6 +12,11 @@ services:
       SYSTEMSTAT_LOG_LEVEL: TRACE
     ports:
       - 9090:9090
+    healthcheck:
+      test: ["CMD", "nc", "-zw1", "localhost", "9090"]
+      interval: 3s
+      timeout: 2s
+      retries: 2
     depends_on:
       - postgres
       - database
@@ -27,6 +32,11 @@ services:
       SYSTEMSTAT_LOG_LEVEL: TRACE
     ports:
       - 9080:9080
+    healthcheck:
+      test: ["CMD", "nc", "-zw1", "localhost", "9080"]
+      interval: 3s
+      timeout: 2s
+      retries: 2
     depends_on:
       - postgres
       - database
@@ -42,6 +52,11 @@ services:
       SYSTEMSTAT_LOG_LEVEL: TRACE
     ports:
       - 9070:9070
+    healthcheck:
+      test: ["CMD", "nc", "-zw1", "localhost", "9070"]
+      interval: 3s
+      timeout: 2s
+      retries: 2
     depends_on:
       - postgres
       - database
@@ -62,6 +77,11 @@ services:
       SYSTEMSTAT_LOG_LEVEL: TRACE
     ports:
       - 9000:9000
+    healthcheck:
+      test: ["CMD", "nc", "-zw1", "localhost", "9000"]
+      interval: 3s
+      timeout: 2s
+      retries: 2
     depends_on:
       - postgres
   postgres:
@@ -72,6 +92,6 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: systemstat
     ports:
-      - 5432:5432
+      - 15432:5432
     volumes:
       - ./scripts/postgres:/var/lib/postgresql/systemstat
