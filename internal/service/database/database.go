@@ -3,8 +3,6 @@ package database
 import (
 	"github.com/jsirianni/systemstat/internal/service/database/postgres"
 	"github.com/jsirianni/systemstat/internal/types/account"
-
-	"github.com/google/uuid"
 )
 
 type Database interface {
@@ -33,7 +31,7 @@ type Database interface {
 	GetToken(token string) (account.Token, error)
 
 	// create a signup token
-	CreateToken() (uuid.UUID, error)
+	CreateToken() (account.Token, error)
 }
 
 func NewPostgres() (Database, error) {

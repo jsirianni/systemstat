@@ -100,7 +100,7 @@ func TestCreateAccount(t *testing.T) {
         return
     }
 
-    uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + email + "/" + token.String()
+    uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + email + "/" + token.Token.String()
     resp, err := http.Post(uri, "application/json", nil)
     if err != nil {
         assert.Empty(t, err)

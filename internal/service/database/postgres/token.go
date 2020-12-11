@@ -6,7 +6,6 @@ import (
     "github.com/jsirianni/systemstat/internal/types/account"
 
     "github.com/pkg/errors"
-    "github.com/google/uuid"
 )
 
 func (p Postgres) ClaimToken(email, token string) (account.Token, error) {
@@ -52,11 +51,11 @@ func (p Postgres) GetToken(token string) (account.Token, error) {
 	return t, err
 }
 
-func (p Postgres) CreateToken() (uuid.UUID, error) {
+func (p Postgres) CreateToken() (account.Token, error) {
     t := account.Token{}
     q := fmt.Sprintf("INSERT INTO signup DEFAULT VALUES RETURNING token, claimed, claimed_by")
     err := p.queryToken(q, &t)
-    return t.Token, err
+    return t, err
 }
 
 func (p Postgres) queryToken(q string, t *account.Token) error {

@@ -58,16 +58,11 @@ func (s Server) createTokenHandler(resp http.ResponseWriter, req *http.Request) 
         return
     }
 
-    var token struct {
-        Token string `json:"token"`
-    }
-    token.Token = t.String()
-
-    log.Trace("token created:", token.Token)
+    log.Trace("token created:", t.Token.String())
 
     resp.Header().Set("Content-Type", "application/json")
     resp.WriteHeader(http.StatusCreated)
-    if err := json.NewEncoder(resp).Encode(token); err != nil {
+    if err := json.NewEncoder(resp).Encode(t); err != nil {
         log.Error(err)
         return
     }
