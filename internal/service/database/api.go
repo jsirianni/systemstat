@@ -4,7 +4,6 @@ import (
     "net/http"
     "expvar"
     "strconv"
-    "strings"
     "encoding/json"
 
     "github.com/jsirianni/systemstat/internal/log"
