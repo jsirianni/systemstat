@@ -1,10 +1,10 @@
 package account
 
 import (
-    "encoding/json"
-    "database/sql/driver"
+	"database/sql/driver"
+	"encoding/json"
 
-    "github.com/pkg/errors"
+	"github.com/pkg/errors"
 )
 
 type alertConfig map[string]interface{}
@@ -35,10 +35,10 @@ func (a *alertConfig) Scan(src interface{}) error {
 }
 
 func (a alertConfig) JSON() ([]byte, error) {
-    return json.Marshal(a)
+	return json.Marshal(a)
 }
 
 func (a alertConfig) String() (string, error) {
-    x, err := a.JSON()
-    return string(x), err
+	x, err := a.JSON()
+	return string(x), err
 }

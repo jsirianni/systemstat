@@ -1,14 +1,15 @@
 package main
 
 import (
-	"os"
 	"flag"
+	"os"
 
 	"github.com/jsirianni/systemstat/internal/log"
 	"github.com/jsirianni/systemstat/internal/service/database"
 )
 
 const defaultPort = 9000
+
 var port int
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 
 	server := database.Server{
 		Port: port,
-		DB: d,
+		DB:   d,
 	}
 
 	if err := server.Run(); err != nil {

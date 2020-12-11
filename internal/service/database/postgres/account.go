@@ -1,11 +1,11 @@
 package postgres
 
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/jsirianni/systemstat/internal/types/account"
+	"github.com/jsirianni/systemstat/internal/types/account"
 
-    "github.com/pkg/errors"
+	"github.com/pkg/errors"
 )
 
 func (p Postgres) AccountCreate(email, token string) (account.Account, error) {
@@ -50,5 +50,5 @@ func (p Postgres) AccountConfigureAlert(alertType string, config []byte) (accoun
 }
 
 func (p Postgres) queryAccount(q string, a *account.Account) error {
-    return p.db.QueryRow(q).Scan(&a.AccountID, &a.RootAPIKey, &a.AlertType, &a.AlertConfig, &a.AdminEmail)
+	return p.db.QueryRow(q).Scan(&a.AccountID, &a.RootAPIKey, &a.AlertType, &a.AlertConfig, &a.AdminEmail)
 }

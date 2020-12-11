@@ -1,8 +1,8 @@
 package log
 
 import (
-	"os"
 	"flag"
+	"os"
 
 	"github.com/golang/glog"
 )
@@ -35,16 +35,16 @@ func SetLogLevel(l string) {
 	switch l {
 	case errorLVL:
 		logLevel = l
-		level    = errorLevel
+		level = errorLevel
 	case infoLVL:
 		logLevel = l
-		level    = infoLevel
+		level = infoLevel
 	case debugLVL:
 		logLevel = l
-		level    = debugLevel
+		level = debugLevel
 	case traceLVL:
 		logLevel = l
-		level    = traceLevel
+		level = traceLevel
 	}
 }
 

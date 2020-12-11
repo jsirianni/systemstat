@@ -4,10 +4,10 @@ package email
    to perform further evaluation on them in the future. */
 
 import (
-    "net/mail"
+	"net/mail"
 )
 
 func Validate(email string) error {
-    _, err := mail.ParseAddress(email)
-    return err
+	_, err := mail.ParseAddress(email)
+	return err
 }
