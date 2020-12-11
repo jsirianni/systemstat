@@ -7,9 +7,9 @@ import (
 	"github.com/golang/glog"
 )
 
-const envLogLevel = "SYSTEMSTAT_LOG_LEVEL"
-
 const (
+	envLogLevel = "SYSTEMSTAT_LOG_LEVEL"
+
 	errorLVL = "ERROR"
 	infoLVL  = "INFO"
 	debugLVL = "DEBUG"
