@@ -26,7 +26,7 @@ test.integration: clean test build.all deploy.local
 
 deploy.local:
 	docker-compose build --parallel
-	docker-compose up -d && sleep 5
+	scripts/deploy/local/docker-compose.sh
 	docker exec systemstat_postgres_1 /var/lib/postgresql/systemstat/initdb.sh
 	docker exec systemstat_postgres_1 /var/lib/postgresql/systemstat/test_data.sh
 
@@ -44,3 +44,4 @@ shellcheck:
 	shellcheck scripts/service/frontend/test/test.sh
 	shellcheck scripts/service/control/test/test.sh
 	shellcheck scripts/service/alert/test/test.sh
+	shellcheck scripts/deploy/local/docker-compose.sh
