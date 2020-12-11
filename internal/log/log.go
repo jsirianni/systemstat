@@ -7,7 +7,7 @@ import (
 	"github.com/golang/glog"
 )
 
-const envLogLevl = "SYSTEMSTAT_LOG_LEVEL"
+const envLogLevel = "SYSTEMSTAT_LOG_LEVEL"
 
 const (
 	errorLVL = "ERROR"
@@ -28,7 +28,7 @@ func init() {
 	flag.Set("logtostderr", "true")
 	flag.Set("stderrthreshold", "WARNING")
 
-	SetLogLevel(os.Getenv(envLogLevl))
+	SetLogLevel(os.Getenv(envLogLevel))
 }
 
 func SetLogLevel(l string) {
