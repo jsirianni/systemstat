@@ -68,9 +68,39 @@ func TestStatus(t *testing.T) {
     assert.Equal(t, 200, resp.StatusCode)
 }
 
+func TestCreateToken(t *testing.T) {
+    uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/token/create"
+    resp, err := http.Post(uri, "application/json", nil)
+    if err != nil {
+        assert.Empty(t, err)
+        return
+    }
+    assert.Equal(t, 201, resp.StatusCode)
+
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        assert.Empty(t, err, "expected a json respsonse body from /v1/account/token/create")
+        return
+    }
+
+    token := account.Token{}
+    if err := json.Unmarshal(body, &token); err != nil {
+        assert.Empty(t, err, "expected no errors when unmarshalling json response body into type Token")
+        return
+    }
+
+    assert.NotEmpty(t, token.Token)
+}
+
 func TestCreateAccount(t *testing.T) {
     email := randomEmail()
-    uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + email
+    token, err := testIntServer.DB.CreateToken()
+    if err != nil {
+        assert.Empty(t, err, "expected CreateToken() to return a nil error")
+        return
+    }
+
+    uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + email + "/" + token.String()
     resp, err := http.Post(uri, "application/json", nil)
     if err != nil {
         assert.Empty(t, err)

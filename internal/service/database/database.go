@@ -3,6 +3,8 @@ package database
 import (
 	"github.com/jsirianni/systemstat/internal/service/database/postgres"
 	"github.com/jsirianni/systemstat/internal/types/account"
+
+	"github.com/google/uuid"
 )
 
 type Database interface {
@@ -13,7 +15,7 @@ type Database interface {
 	TestConnection() error
 
 	// Create an account
-	AccountCreate(email string) (account.Account, error)
+	AccountCreate(email, token string) (account.Account, error)
 
 	// Retrieve an account by account_id
 	AccountByID(id string) (account.Account, error)
@@ -23,6 +25,15 @@ type Database interface {
 
 	// Configure an accounts alert type
 	AccountConfigureAlert(alertType string, config []byte) (account.Account, error)
+
+	// claim a sign up token
+	ClaimToken(email, token string) (account.Token, error)
+
+	// get an existing token
+	GetToken(token string) (account.Token, error)
+
+	// create a signup token
+	CreateToken() (uuid.UUID, error)
 }
 
 func NewPostgres() (Database, error) {

@@ -11,6 +11,7 @@ import (
 
     "github.com/gorilla/mux"
     "github.com/pkg/errors"
+    "github.com/google/uuid"
 )
 
 // counter metrics exposed at /debug/vars
@@ -32,8 +33,9 @@ func (s Server) Run() error {
 
     router := mux.NewRouter()
     router.HandleFunc("/status", s.status).Methods("GET")
+    router.HandleFunc("/v1/account/token/create", s.createTokenHandler).Methods("POST")
     router.HandleFunc("/v1/account/{account_id}", s.getAccountHandler).Methods("GET")
-    router.HandleFunc("/v1/account/{email}", s.createAccountHandler).Methods("POST")
+    router.HandleFunc("/v1/account/{email}/{token}", s.createAccountHandler).Methods("POST")
     // expvar runtime  metrics
     router.Handle("/debug/vars", http.DefaultServeMux)
     return http.ListenAndServe(":" + port, router)
@@ -48,35 +50,72 @@ func (s Server) status(resp http.ResponseWriter, req *http.Request) {
 	resp.WriteHeader(http.StatusOK)
 }
 
+func (s Server) createTokenHandler(resp http.ResponseWriter, req *http.Request) {
+    t, err := s.DB.CreateToken()
+    if err != nil {
+        log.Error(err)
+        resp.WriteHeader(http.StatusInternalServerError)
+        return
+    }
+
+    var token struct {
+        Token string `json:"token"`
+    }
+    token.Token = t.String()
+
+    log.Trace("token created:", token.Token)
+
+    resp.Header().Set("Content-Type", "application/json")
+    resp.WriteHeader(http.StatusCreated)
+    if err := json.NewEncoder(resp).Encode(token); err != nil {
+        log.Error(err)
+        return
+    }
+}
+
 func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request) {
     counts.Add("total_requests", 1)
 
     emailAddr :=  mux.Vars(req)["email"]
-    if emailAddr == "" {
-        log.Debug(errors.New("createAccount: client request missing 'email' variable"))
+    token :=  mux.Vars(req)["token"]
+    if emailAddr == "" || token == "" {
+        log.Debug(errors.New("createAccount: client request missing 'email' or 'token' parameter"))
         resp.WriteHeader(http.StatusBadRequest)
         return
     }
 
-    genericErrContext := errors.New("createAccount: email address " + emailAddr)
+    const invalidtoken = "signup token is invalid"
 
     if err := email.Validate(emailAddr); err != nil {
-        log.Debug(errors.Wrap(err, genericErrContext.Error()))
-        http.Error(resp, "email address is not valid", http.StatusUnprocessableEntity)
+        log.Debug(err)
+        http.Error(resp, "email addess is not valid", http.StatusUnprocessableEntity)
+        return
+    }
+
+    if _, err := uuid.Parse(token); err != nil {
+        log.Debug(err)
+        http.Error(resp, invalidtoken, http.StatusUnprocessableEntity)
         return
     }
 
     // check if account exists first, err will not be nil if the account
     // does not exist
     if _, err := s.DB.AccountByEmail(emailAddr); err == nil {
-        log.Debug(errors.Wrap(errors.New("account already exists"), genericErrContext.Error()))
+        log.Debug(errors.New("account already exists"))
         resp.WriteHeader(http.StatusConflict)
         return
     }
 
-    account, err := s.DB.AccountCreate(emailAddr)
+    // claim the token before creating the account
+    if _, err := s.DB.ClaimToken(emailAddr, token); err != nil {
+        log.Debug(err)
+        http.Error(resp, invalidtoken, http.StatusUnprocessableEntity)
+        return
+    }
+
+    account, err := s.DB.AccountCreate(emailAddr, token)
     if err != nil {
-        log.Error(errors.Wrap(err, genericErrContext.Error()))
+        log.Error(err)
         resp.WriteHeader(http.StatusInternalServerError)
         return
     }
@@ -85,7 +124,7 @@ func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request
     resp.Header().Set("Content-Type", "application/json")
     resp.WriteHeader(http.StatusCreated)
     if err := json.NewEncoder(resp).Encode(account); err != nil {
-        log.Error(errors.Wrap(err, genericErrContext.Error()))
+        log.Error(err)
         return
     }
 }

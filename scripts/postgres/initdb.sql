@@ -37,5 +37,5 @@ CREATE TABLE IF NOT EXISTS signup (
     PRIMARY KEY (token),
 
     claimed BOOLEAN DEFAULT false,
-    claimed_by VARCHAR(254)
+    claimed_by VARCHAR(254) DEFAULT ''
 );

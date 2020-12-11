@@ -8,7 +8,7 @@ import (
     "github.com/pkg/errors"
 )
 
-func (p Postgres) AccountCreate(email string) (account.Account, error) {
+func (p Postgres) AccountCreate(email, token string) (account.Account, error) {
 	if email == "" {
 		return account.Account{}, errors.New("email is a required parameter when creating an account")
 	}
