@@ -9,7 +9,7 @@ build: build.all
 build.all: build.database
 	go build ./cmd/agent
 	go build ./cmd/cli
-	go build ./cmd/api
+	go build ./cmd/frontend
 	go build ./cmd/control
 	go build ./cmd/alert
 
@@ -22,10 +22,11 @@ test: shellcheck
 
 test.integration: clean test deploy.local
 	scripts/service/database/test/test.sh
+	scripts/service/frontend/test/test.sh
 	source ./test.env && go test ./... -tags=integration
 
 deploy.local:
-	docker-compose build
+	docker-compose build --parallel
 	docker-compose up -d && sleep 5
 	docker exec systemstat_db_1 /var/lib/postgresql/systemstat/initdb.sh
 	docker exec systemstat_db_1 /var/lib/postgresql/systemstat/test_data.sh
@@ -35,9 +36,10 @@ fmt:
 
 clean:
 	docker-compose down --remove-orphans
-	rm -f agent alert api cli control database
+	rm -f agent alert frontend cli control database
 
 shellcheck:
 	shellcheck scripts/postgres/initdb.sh
 	shellcheck scripts/postgres/test_data.sh
 	shellcheck scripts/service/database/test/test.sh
+	shellcheck scripts/service/frontend/test/test.sh

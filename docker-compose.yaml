@@ -1,5 +1,17 @@
 version: '3.1'
 services:
+  frontend:
+    image: systemstat/frontend:latest
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./cmd/frontend/Dockerfile
+      args:
+        buildno: 1
+    environment:
+      SYSTEMSTAT_LOG_LEVEL: TRACE
+    ports:
+      - 9090:9090
   database:
     image: systemstat/database:latest
     restart: always
