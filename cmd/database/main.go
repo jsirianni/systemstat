@@ -8,7 +8,11 @@ import (
 	"github.com/jsirianni/systemstat/internal/service/database"
 )
 
+const defaultPort = 9000
+var port int
+
 func main() {
+	flag.IntVar(&port, "port", defaultPort, "port to use for http server")
 	flag.Parse()
 
 	d, err := database.NewPostgres()
@@ -18,7 +22,7 @@ func main() {
 	}
 
 	server := database.Server{
-		Port: 9000,
+		Port: port,
 		DB: d,
 	}
 
