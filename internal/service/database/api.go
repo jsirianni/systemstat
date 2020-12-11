@@ -32,8 +32,8 @@ func (s Server) Run() error {
 
     router := mux.NewRouter()
     router.HandleFunc("/status", s.status).Methods("GET")
-    router.HandleFunc("/v1/account/{email}", s.getAccount).Methods("GET")
-    router.HandleFunc("/v1/account/{email}", s.createAccount).Methods("POST")
+    router.HandleFunc("/v1/account/{email}", s.getAccountHandler).Methods("GET")
+    router.HandleFunc("/v1/account/{email}", s.createAccountHandler).Methods("POST")
     // expvar runtime  metrics
     router.Handle("/debug/vars", http.DefaultServeMux)
     return http.ListenAndServe(":" + port, router)
@@ -48,7 +48,7 @@ func (s Server) status(resp http.ResponseWriter, req *http.Request) {
 	resp.WriteHeader(http.StatusOK)
 }
 
-func (s Server) createAccount(resp http.ResponseWriter, req *http.Request) {
+func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request) {
     counts.Add("total_requests", 1)
 
     emailAddr :=  mux.Vars(req)["email"]
@@ -90,7 +90,7 @@ func (s Server) createAccount(resp http.ResponseWriter, req *http.Request) {
     }
 }
 
-func (s Server) getAccount(resp http.ResponseWriter, req *http.Request) {
+func (s Server) getAccountHandler(resp http.ResponseWriter, req *http.Request) {
     counts.Add("total_requests", 1)
 
     emailAddr :=  mux.Vars(req)["email"]
