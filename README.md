@@ -2,7 +2,7 @@
 
 ## Developing
 
-Systemstat is developed with GO 1.15.
+Systemstat is developed with Golang 1.15.
 
 ## Testing
 
