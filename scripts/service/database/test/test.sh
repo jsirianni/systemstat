@@ -10,12 +10,5 @@ fail() {
 }
 trap 'fail $LINENO' ERR
 
-curl --fail -s "localhost:9000/v1/account/user100@test.com" > /dev/null -XPOST
-curl --fail -s "localhost:9000/v1/account/user101@test.com" > /dev/null -XPOST
-curl --fail -s "localhost:9000/v1/account/user102@test.com" > /dev/null -XPOST
-
-curl --fail -s "localhost:9000/v1/account/user100@test.com" > /dev/null -XGET
-curl --fail -s "localhost:9000/v1/account/user101@test.com" > /dev/null -XGET
-curl --fail -s "localhost:9000/v1/account/user102@test.com" > /dev/null -XGET
-
-echo "service: 'database' test script passed"
+ACCOUNT_ID=$(curl --fail -v -s "localhost:9000/v1/account/user100@test.com" -XPOST | jq -r '.account_id')
+curl --fail -v -s "localhost:9000/v1/account/${ACCOUNT_ID}" -XGET

@@ -32,7 +32,7 @@ func (s Server) Run() error {
 
     router := mux.NewRouter()
     router.HandleFunc("/status", s.status).Methods("GET")
-    router.HandleFunc("/v1/account/{email}", s.getAccountHandler).Methods("GET")
+    router.HandleFunc("/v1/account/{account_id}", s.getAccountHandler).Methods("GET")
     router.HandleFunc("/v1/account/{email}", s.createAccountHandler).Methods("POST")
     // expvar runtime  metrics
     router.Handle("/debug/vars", http.DefaultServeMux)
@@ -93,16 +93,16 @@ func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request
 func (s Server) getAccountHandler(resp http.ResponseWriter, req *http.Request) {
     counts.Add("total_requests", 1)
 
-    emailAddr :=  mux.Vars(req)["email"]
-    if emailAddr == "" {
-        log.Debug(errors.New("getAccount: client request missing 'email' variable"))
+    id :=  mux.Vars(req)["account_id"]
+    if id == "" {
+        log.Debug(errors.New("getAccount: client request missing 'account_id' variable"))
         resp.WriteHeader(http.StatusBadRequest)
         return
     }
 
-    genericErrContext := errors.New("getAccount: email address " + emailAddr)
+    genericErrContext := errors.New("getAccount: account_id " + id)
 
-    account, err := s.DB.AccountByEmail(emailAddr)
+    account, err := s.DB.AccountByID(id)
     if err != nil {
         log.Debug(errors.Wrap(err, genericErrContext.Error()))
         resp.WriteHeader(http.StatusNotFound)
@@ -114,5 +114,5 @@ func (s Server) getAccountHandler(resp http.ResponseWriter, req *http.Request) {
         log.Error(errors.Wrap(err, genericErrContext.Error()))
         return
     }
-    log.Trace("getAccount: account retrieved:", emailAddr)
+    log.Trace("getAccount: account retrieved:", id, account.AdminEmail)
 }

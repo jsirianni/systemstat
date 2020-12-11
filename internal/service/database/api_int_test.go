@@ -104,7 +104,11 @@ func TestCreateAccount(t *testing.T) {
 }
 
 func TestGetAccount(t *testing.T) {
-    uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/user100@test.com"
+    // id is from scripts/postgres/test_data.sql
+    id := "0234c572-15ec-4e67-9081-6a1c42a00090"
+    email := "integration@test.com"
+
+    uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + id
     resp, err := http.Get(uri)
     if err != nil {
         assert.Empty(t, err)
@@ -124,9 +128,9 @@ func TestGetAccount(t *testing.T) {
         return
     }
 
-    assert.NotEmpty(t, a.AccountID)
+    assert.NotEqual(t, id, a.AccountID)
     assert.NotEmpty(t, a.RootAPIKey)
-    assert.Equal(t, "user100@test.com", a.AdminEmail)
+    assert.Equal(t, email, a.AdminEmail)
 }
 
 func TestGetAccount404(t *testing.T) {

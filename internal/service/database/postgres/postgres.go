@@ -56,6 +56,18 @@ func (p Postgres) AccountCreate(email string) (account.Account, error) {
 	return p.AccountByEmail(email)
 }
 
+func (p Postgres) AccountByID(id string) (account.Account, error) {
+	a := account.Account{}
+
+	if id == "" {
+		return a, errors.New("account_id is a required parameter when reading an account")
+	}
+
+	q := fmt.Sprintf("SELECT * FROM account WHERE account_id = '%s'", id)
+	err := p.db.QueryRow(q).Scan(&a.AccountID, &a.RootAPIKey, &a.AlertType, &a.AlertConfig, &a.AdminEmail)
+	return a, err
+}
+
 func (p Postgres) AccountByEmail(email string) (account.Account, error) {
 	a := account.Account{}
 

@@ -6,11 +6,22 @@ import (
 )
 
 type Database interface {
+	// Validate the database configuration
 	Validate() error
+
+	// Test connection to the database
 	TestConnection() error
 
+	// Create an account
 	AccountCreate(email string) (account.Account, error)
+
+	// Retrieve an account by account_id
+	AccountByID(id string) (account.Account, error)
+
+	// Retrieve an account by email
 	AccountByEmail(email string) (account.Account, error)
+
+	// Configure an accounts alert type
 	AccountConfigureAlert(alertType string, config []byte) (account.Account, error)
 }
 
