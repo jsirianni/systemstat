@@ -30,6 +30,21 @@ services:
     depends_on:
       - db
       - database
+  alert:
+    image: systemstat/alert:latest
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./cmd/alert/Dockerfile
+      args:
+        buildno: 1
+    environment:
+      SYSTEMSTAT_LOG_LEVEL: TRACE
+    ports:
+      - 9070:9070
+    depends_on:
+      - db
+      - database
   database:
     image: systemstat/database:latest
     restart: always
