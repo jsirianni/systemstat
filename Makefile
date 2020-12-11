@@ -23,6 +23,7 @@ test: shellcheck
 test.integration: clean test deploy.local
 	scripts/service/database/test/test.sh
 	scripts/service/frontend/test/test.sh
+	scripts/service/control/test/test.sh
 	source ./test.env && go test ./... -tags=integration
 
 deploy.local:
@@ -43,3 +44,4 @@ shellcheck:
 	shellcheck scripts/postgres/test_data.sh
 	shellcheck scripts/service/database/test/test.sh
 	shellcheck scripts/service/frontend/test/test.sh
+	shellcheck scripts/service/control/test/test.sh

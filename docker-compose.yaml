@@ -12,6 +12,24 @@ services:
       SYSTEMSTAT_LOG_LEVEL: TRACE
     ports:
       - 9090:9090
+    depends_on:
+      - db
+      - database
+  control:
+    image: systemstat/control:latest
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./cmd/control/Dockerfile
+      args:
+        buildno: 1
+    environment:
+      SYSTEMSTAT_LOG_LEVEL: TRACE
+    ports:
+      - 9080:9080
+    depends_on:
+      - db
+      - database
   database:
     image: systemstat/database:latest
     restart: always
@@ -29,6 +47,8 @@ services:
       SYSTEMSTAT_LOG_LEVEL: TRACE
     ports:
       - 9000:9000
+    depends_on:
+      - db
   db:
     image: postgres:13
     restart: always
@@ -40,8 +60,3 @@ services:
       - 5432:5432
     volumes:
       - ./scripts/postgres:/var/lib/postgresql/systemstat
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
