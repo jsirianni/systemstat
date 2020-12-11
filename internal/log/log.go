@@ -9,9 +9,7 @@ import (
 
 func init() {
 	flag.Set("logtostderr", "true")
-	// stderrthreshold=[WARNING|ERROR|INFO|FATAL]
 	flag.Set("stderrthreshold", "WARNING")
-//	flag.Parse()
 }
 
 func Info(m ...string) {
