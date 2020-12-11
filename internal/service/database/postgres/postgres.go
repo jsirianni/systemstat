@@ -28,8 +28,7 @@ func New() (Postgres, error) {
 		return p, err
 	}
 
-	var conn = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		p.host, p.port, p.user, p.pass, p.dbname)
+	var conn = p.connectionString()
 	var err error
 
 	p.db, err = sql.Open("postgres", conn)
@@ -82,4 +81,9 @@ func (p Postgres) AccountByEmail(email string) (account.Account, error) {
 
 func (p Postgres) AccountConfigureAlert(alertType string, config []byte) (account.Account, error) {
 	return account.Account{}, nil
+}
+
+func (p Postgres) connectionString() string {
+	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		p.host, p.port, p.user, p.pass, p.dbname)
 }
