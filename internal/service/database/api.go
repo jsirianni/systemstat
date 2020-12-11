@@ -35,7 +35,7 @@ func (s Server) Run() error {
 	router.HandleFunc("/status", s.status).Methods("GET")
 	router.HandleFunc("/v1/account/token/create", s.createTokenHandler).Methods("POST")
 	router.HandleFunc("/v1/account/{account_id}", s.getAccountHandler).Methods("GET")
-	router.HandleFunc("/v1/account/{email}/{token}", s.createAccountHandler).Methods("POST")
+	router.HandleFunc("/v1/account/{token}/{email}", s.createAccountHandler).Methods("POST")
 	// expvar runtime  metrics
 	router.Handle("/debug/vars", http.DefaultServeMux)
 	return http.ListenAndServe(":"+port, router)
