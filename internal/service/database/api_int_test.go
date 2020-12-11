@@ -63,8 +63,8 @@ func TestStatus(t *testing.T) {
     resp, err := http.Get(uri)
     if err != nil {
         assert.Empty(t, err)
+        return
     }
-
     assert.Equal(t, 200, resp.StatusCode)
 }
 
@@ -93,6 +93,14 @@ func TestCreateAccount(t *testing.T) {
     assert.NotEmpty(t, a.AccountID)
     assert.NotEmpty(t, a.RootAPIKey)
     assert.Equal(t, email, a.AdminEmail)
+
+    // try a second time
+    resp, err = http.Post(uri, "application/json", nil)
+    if err != nil {
+        assert.Empty(t, err)
+        return
+    }
+    assert.Equal(t, 409, resp.StatusCode)
 }
 
 func TestGetAccount(t *testing.T) {
