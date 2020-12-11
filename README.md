@@ -1,5 +1,7 @@
 # systemstat
 
+work in progress
+
 ## Developing
 
 Systemstat is developed with Golang 1.15.
