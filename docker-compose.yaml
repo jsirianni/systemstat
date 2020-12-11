@@ -13,7 +13,7 @@ services:
     ports:
       - 9090:9090
     depends_on:
-      - db
+      - postgres
       - database
   control:
     image: systemstat/control:latest
@@ -28,7 +28,7 @@ services:
     ports:
       - 9080:9080
     depends_on:
-      - db
+      - postgres
       - database
   alert:
     image: systemstat/alert:latest
@@ -43,7 +43,7 @@ services:
     ports:
       - 9070:9070
     depends_on:
-      - db
+      - postgres
       - database
   database:
     image: systemstat/database:latest
@@ -54,7 +54,7 @@ services:
       args:
         buildno: 1
     environment:
-      DATABASE_HOST: db
+      DATABASE_HOST: postgres
       DATABASE_PORT: "5432"
       DATABASE_NAME: systemstat
       DATABASE_USERNAME: postgres
@@ -63,8 +63,8 @@ services:
     ports:
       - 9000:9000
     depends_on:
-      - db
-  db:
+      - postgres
+  postgres:
     image: postgres:13
     restart: always
     environment:

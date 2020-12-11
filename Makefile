@@ -6,21 +6,18 @@ endif
 
 build: build.all
 
-build.all: build.database
+build.all:
 	go build ./cmd/agent
 	go build ./cmd/cli
 	go build ./cmd/frontend
 	go build ./cmd/control
 	go build ./cmd/alert
-
-build.database:
 	go build ./cmd/database
-	docker build -t systemstat/database:latest . -f cmd/database/Dockerfile
 
 test: shellcheck
 	go test ./...
 
-test.integration: clean test deploy.local
+test.integration: clean test build.all deploy.local
 	scripts/service/database/test/test.sh
 	scripts/service/frontend/test/test.sh
 	scripts/service/control/test/test.sh
@@ -30,8 +27,8 @@ test.integration: clean test deploy.local
 deploy.local:
 	docker-compose build --parallel
 	docker-compose up -d && sleep 5
-	docker exec systemstat_db_1 /var/lib/postgresql/systemstat/initdb.sh
-	docker exec systemstat_db_1 /var/lib/postgresql/systemstat/test_data.sh
+	docker exec systemstat_postgres_1 /var/lib/postgresql/systemstat/initdb.sh
+	docker exec systemstat_postgres_1 /var/lib/postgresql/systemstat/test_data.sh
 
 fmt:
 	go fmt ./...
