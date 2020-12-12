@@ -17,7 +17,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ApiClient interface {
-	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountReply, error)
+	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*Account, error)
 }
 
 type apiClient struct {
@@ -28,8 +28,8 @@ func NewApiClient(cc grpc.ClientConnInterface) ApiClient {
 	return &apiClient{cc}
 }
 
-func (c *apiClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountReply, error) {
-	out := new(GetAccountReply)
+func (c *apiClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*Account, error) {
+	out := new(Account)
 	err := c.cc.Invoke(ctx, "/proto.Api/GetAccount", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func (c *apiClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts 
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
 type ApiServer interface {
-	GetAccount(context.Context, *GetAccountRequest) (*GetAccountReply, error)
+	GetAccount(context.Context, *GetAccountRequest) (*Account, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -49,7 +49,7 @@ type ApiServer interface {
 type UnimplementedApiServer struct {
 }
 
-func (UnimplementedApiServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountReply, error) {
+func (UnimplementedApiServer) GetAccount(context.Context, *GetAccountRequest) (*Account, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}

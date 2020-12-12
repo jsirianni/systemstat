@@ -116,7 +116,7 @@ func TestCreateAccount(t *testing.T) {
 		return
 	}
 
-	a := proto.GetAccountReply{}
+	a := proto.Account{}
 	if err := json.Unmarshal(body, &a); err != nil {
 		assert.Empty(t, err, "expected no errors when unmarshalling json response body into type Account")
 		return
@@ -154,7 +154,7 @@ func TestGetAccount(t *testing.T) {
 		return
 	}
 
-	a := proto.GetAccountReply{}
+	a := proto.Account{}
 	if err := json.Unmarshal(body, &a); err != nil {
 		assert.Empty(t, err, "expected no errors when unmarshalling json response body into type Account")
 		return

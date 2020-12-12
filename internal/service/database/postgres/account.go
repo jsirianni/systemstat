@@ -8,21 +8,21 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (p Postgres) AccountCreate(email, token string) (proto.GetAccountReply, error) {
+func (p Postgres) AccountCreate(email, token string) (proto.Account, error) {
 	if email == "" {
-		return proto.GetAccountReply{}, errors.New("email is a required parameter when creating an account")
+		return proto.Account{}, errors.New("email is a required parameter when creating an account")
 	}
 
 	q := fmt.Sprintf("INSERT INTO account (admin_email) VALUES ('%s')", email)
 	if _, err := p.db.Exec(q); err != nil {
-		return proto.GetAccountReply{}, err
+		return proto.Account{}, err
 	}
 
 	return p.AccountByEmail(email)
 }
 
-func (p Postgres) AccountByID(id string) (proto.GetAccountReply, error) {
-	a := proto.GetAccountReply{}
+func (p Postgres) AccountByID(id string) (proto.Account, error) {
+	a := proto.Account{}
 
 	if id == "" {
 		return a, errors.New("account_id is a required parameter when reading an account")
@@ -33,8 +33,8 @@ func (p Postgres) AccountByID(id string) (proto.GetAccountReply, error) {
 	return a, err
 }
 
-func (p Postgres) AccountByEmail(email string) (proto.GetAccountReply, error) {
-	a := proto.GetAccountReply{}
+func (p Postgres) AccountByEmail(email string) (proto.Account, error) {
+	a := proto.Account{}
 
 	if email == "" {
 		return a, errors.New("email is a required parameter when reading an account")
@@ -45,10 +45,10 @@ func (p Postgres) AccountByEmail(email string) (proto.GetAccountReply, error) {
 	return a, err
 }
 
-func (p Postgres) AccountConfigureAlert(alertType string, config []byte) (proto.GetAccountReply, error) {
-	return proto.GetAccountReply{}, nil
+func (p Postgres) AccountConfigureAlert(alertType string, config []byte) (proto.Account, error) {
+	return proto.Account{}, nil
 }
 
-func (p Postgres) queryAccount(q string, a *proto.GetAccountReply) error {
+func (p Postgres) queryAccount(q string, a *proto.Account) error {
 	return p.db.QueryRow(q).Scan(&a.AccountId, &a.RootApiKey, &a.AlertType, &a.AlertConfig, &a.AdminEmail)
 }

@@ -14,16 +14,16 @@ type Database interface {
 	TestConnection() error
 
 	// Create an account
-	AccountCreate(email, token string) (proto.GetAccountReply, error)
+	AccountCreate(email, token string) (proto.Account, error)
 
 	// Retrieve an account by account_id
-	AccountByID(id string) (proto.GetAccountReply, error)
+	AccountByID(id string) (proto.Account, error)
 
 	// Retrieve an account by email
-	AccountByEmail(email string) (proto.GetAccountReply, error)
+	AccountByEmail(email string) (proto.Account, error)
 
 	// Configure an accounts alert type
-	AccountConfigureAlert(alertType string, config []byte) (proto.GetAccountReply, error)
+	AccountConfigureAlert(alertType string, config []byte) (proto.Account, error)
 
 	// claim a sign up token
 	ClaimToken(email, token string) (account.Token, error)

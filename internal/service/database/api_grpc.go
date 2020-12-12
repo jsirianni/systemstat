@@ -36,7 +36,7 @@ func (s Server) RunGRPC() error {
     return grpcServer.Serve(lis)
 }
 
-func (s Server) GetAccount(c context.Context, req *proto.GetAccountRequest) (*proto.GetAccountReply, error) {
+func (s Server) GetAccount(c context.Context, req *proto.GetAccountRequest) (*proto.Account, error) {
 	a, err := s.DB.AccountByID(req.AccountId)
     return &a, err
 }

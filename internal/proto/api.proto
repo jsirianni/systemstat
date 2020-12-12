@@ -5,14 +5,14 @@ option go_package = "github.com/jsirianni/systemstat/internal/service/database/p
 package proto;
 
 service Api {
-  rpc GetAccount (GetAccountRequest) returns (GetAccountReply) {}
+  rpc GetAccount (GetAccountRequest) returns (Account) {}
 }
 
 message GetAccountRequest {
     string account_id = 1;
 }
 
-message GetAccountReply {
+message Account {
     string account_id = 1;
     string root_api_key = 2;
     string alert_type = 3;
