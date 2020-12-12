@@ -18,7 +18,10 @@ import (
 var counts = expvar.NewMap("counters")
 
 type Server struct {
-	Port int
+	Port struct {
+		HTTP int
+		GRPC int
+	}
 	DB   Database
 }
 
@@ -26,8 +29,8 @@ func init() {
 	counts.Add("total_requests", 0)
 }
 
-func (s Server) Run() error {
-	port := strconv.Itoa(s.Port)
+func (s Server) RunHTTP() error {
+	port := strconv.Itoa(s.Port.HTTP)
 
 	log.Info("starting http api on port:", port)
 

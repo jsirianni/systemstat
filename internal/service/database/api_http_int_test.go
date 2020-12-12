@@ -28,12 +28,12 @@ func init() {
 		panic(err)
 	}
 
-	testIntServer.Port = testIntServerPort
+	testIntServer.Port.HTTP = testIntServerPort
 	testIntServer.DB = db
 
 	// run the server on a goroutine and then sleep two seconds
 	// to make sure the server is running.
-	go testIntServer.Run()
+	go testIntServer.RunHTTP()
 	if err := testConnect(); err != nil {
 		panic(err)
 	}
