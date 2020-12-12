@@ -16,7 +16,7 @@ message HealthRequest {
 }
 
 message Health {
-
+    int32 http_status = 1;
 }
 
 message CreateAccountRequest {
@@ -34,6 +34,7 @@ message Account {
     string alert_type = 3;
     bytes alert_config = 4;
     string admin_email = 5;
+    int32 http_status = 6;
 }
 
 message CreateTokenRequest {
@@ -44,4 +45,5 @@ message Token {
     string token = 1;
     bool claimed = 2;
     string claimed_by = 3;
+    int32 http_status = 4;
 }

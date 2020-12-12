@@ -2,6 +2,7 @@ package database
 
 import (
     "fmt"
+    "net/http"
 
     "github.com/jsirianni/systemstat/api"
     "github.com/jsirianni/systemstat/internal/log"
@@ -25,7 +26,10 @@ func (s Server) status() (h api.Health, err error) {
     err = s.DB.TestConnection()
     if err != nil {
         log.Error(err)
+        h.HttpStatus = http.StatusInternalServerError
+        return
     }
+    h.HttpStatus = http.StatusOK
     return
 }
 

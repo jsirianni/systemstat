@@ -25,8 +25,8 @@ func (s Server) RunHTTP() error {
 }
 
 func (s Server) statusHandler(resp http.ResponseWriter, req *http.Request) {
-	if _, err := s.status(); err != nil {
-		resp.WriteHeader(http.StatusInternalServerError)
+	if h, err := s.status(); err != nil {
+		resp.WriteHeader(int(h.HttpStatus))
 		return
 	}
 	resp.WriteHeader(http.StatusOK)
