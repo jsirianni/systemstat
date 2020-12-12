@@ -76,11 +76,15 @@ services:
       DATABASE_PASSWORD: postgres
       SYSTEMSTAT_LOG_LEVEL: TRACE
       GO_ENV: "development"
+      HTTP_PORT: "9000"
+      GRPC_PORT: "9100"
     ports:
+      # http
       - 9000:9000
+      # grpc
       - 9100:9100
     healthcheck:
-      test: ["CMD", "nc", "-zw1", "localhost", "9000"]
+      test: ["CMD", "/healthcheck.sh"]
       interval: 3s
       timeout: 2s
       retries: 2
