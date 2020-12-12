@@ -1,4 +1,5 @@
 SHELL := /bin/bash
+CGO_ENABLED := 0
 
 ifeq (, $(shell which docker))
     $(error "No docker in $(PATH)")
@@ -6,15 +7,15 @@ endif
 
 build: build.all
 build.all: build.agent build.cli build.frontend build.control build.alert build.database
-build.agent:
+build.agent: protobuf.generate
 	go build -o bin/ ./cmd/agent
-build.cli:
+build.cli: protobuf.generate
 	go build -o bin/ ./cmd/cli
-build.frontend:
+build.frontend: protobuf.generate
 	go build -o bin/ ./cmd/frontend
-build.control:
+build.control: protobuf.generate
 	go build -o bin/ ./cmd/control
-build.alert:
+build.alert: protobuf.generate
 	go build -o bin/ ./cmd/alert
 build.database: protobuf.generate
 	go build -o bin/ ./cmd/database
@@ -55,7 +56,7 @@ shellcheck:
 	shellcheck scripts/deploy/local/docker-compose.sh
 
 protobuf.generate:
-	cd api/ && \
+	@cd api/ && \
 		protoc \
 			--go_out=. \
 			--go_opt=paths=source_relative \
