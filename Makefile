@@ -5,28 +5,36 @@ ifeq (, $(shell which docker))
 endif
 
 build: build.all
-
-build.all:
+build.all: build.agent build.cli build.frontend build.control build.alert build.database
+build.agent:
 	go build -o bin/ ./cmd/agent
+build.cli:
 	go build -o bin/ ./cmd/cli
+build.frontend:
 	go build -o bin/ ./cmd/frontend
+build.control:
 	go build -o bin/ ./cmd/control
+build.alert:
 	go build -o bin/ ./cmd/alert
+build.database:
 	go build -o bin/ ./cmd/database
 
 test: shellcheck
 	go test ./...
-
-test.integration: clean test build.all deploy.local
+test.scripts:
 	scripts/service/database/test/test.sh
 	scripts/service/frontend/test/test.sh
 	scripts/service/control/test/test.sh
 	scripts/service/alert/test/test.sh
+test.integration: clean test deploy.local test.scripts
 	source ./test.env && go test ./... -tags=integration
 
-deploy.local:
+docker-compose.build:
 	docker-compose build --parallel
+docker-compose.deploy:
 	scripts/deploy/local/docker-compose.sh
+
+deploy.local: docker-compose.build docker-compose.deploy
 	docker exec systemstat_postgres_1 /var/lib/postgresql/systemstat/initdb.sh
 	docker exec systemstat_postgres_1 /var/lib/postgresql/systemstat/test_data.sh
 
@@ -47,7 +55,6 @@ shellcheck:
 	shellcheck scripts/deploy/local/docker-compose.sh
 
 protobuf.generate: protobuf.generate.database
-
 protobuf.generate.database:
 	cd internal/service/database && \
 		protoc \
