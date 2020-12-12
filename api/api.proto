@@ -7,6 +7,12 @@ package api;
 service Api {
     rpc GetAccount (GetAccountRequest) returns (Account) {}
     rpc CreateToken (CreateTokenRequest) returns (Token) {}
+    rpc CreateAccount (CreateAccountRequest) returns (Account) {}
+}
+
+message CreateAccountRequest {
+    string token = 1;
+    string email = 2;
 }
 
 message GetAccountRequest {

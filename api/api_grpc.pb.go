@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ApiClient interface {
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*Account, error)
 	CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...grpc.CallOption) (*Token, error)
+	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*Account, error)
 }
 
 type apiClient struct {
@@ -47,12 +48,22 @@ func (c *apiClient) CreateToken(ctx context.Context, in *CreateTokenRequest, opt
 	return out, nil
 }
 
+func (c *apiClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*Account, error) {
+	out := new(Account)
+	err := c.cc.Invoke(ctx, "/api.Api/CreateAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
 type ApiServer interface {
 	GetAccount(context.Context, *GetAccountRequest) (*Account, error)
 	CreateToken(context.Context, *CreateTokenRequest) (*Token, error)
+	CreateAccount(context.Context, *CreateAccountRequest) (*Account, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -65,6 +76,9 @@ func (UnimplementedApiServer) GetAccount(context.Context, *GetAccountRequest) (*
 }
 func (UnimplementedApiServer) CreateToken(context.Context, *CreateTokenRequest) (*Token, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateToken not implemented")
+}
+func (UnimplementedApiServer) CreateAccount(context.Context, *CreateAccountRequest) (*Account, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccount not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -115,6 +129,24 @@ func _Api_CreateToken_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_CreateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).CreateAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Api/CreateAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).CreateAccount(ctx, req.(*CreateAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Api_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "api.Api",
 	HandlerType: (*ApiServer)(nil),
@@ -126,6 +158,10 @@ var _Api_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateToken",
 			Handler:    _Api_CreateToken_Handler,
+		},
+		{
+			MethodName: "CreateAccount",
+			Handler:    _Api_CreateAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
