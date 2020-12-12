@@ -2,7 +2,7 @@ package database
 
 import (
 	"github.com/jsirianni/systemstat/internal/service/database/postgres"
-	"github.com/jsirianni/systemstat/internal/proto"
+	"github.com/jsirianni/systemstat/api"
 	"github.com/jsirianni/systemstat/internal/types/account"
 )
 
@@ -14,16 +14,16 @@ type Database interface {
 	TestConnection() error
 
 	// Create an account
-	AccountCreate(email, token string) (proto.Account, error)
+	AccountCreate(email, token string) (api.Account, error)
 
 	// Retrieve an account by account_id
-	AccountByID(id string) (proto.Account, error)
+	AccountByID(id string) (api.Account, error)
 
 	// Retrieve an account by email
-	AccountByEmail(email string) (proto.Account, error)
+	AccountByEmail(email string) (api.Account, error)
 
 	// Configure an accounts alert type
-	AccountConfigureAlert(alertType string, config []byte) (proto.Account, error)
+	AccountConfigureAlert(alertType string, config []byte) (api.Account, error)
 
 	// claim a sign up token
 	ClaimToken(email, token string) (account.Token, error)

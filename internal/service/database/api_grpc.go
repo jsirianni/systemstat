@@ -9,7 +9,7 @@ import (
 
 
     "github.com/jsirianni/systemstat/internal/log"
-    "github.com/jsirianni/systemstat/internal/proto"
+    "github.com/jsirianni/systemstat/api"
 
     "google.golang.org/grpc"
     "google.golang.org/grpc/reflection"
@@ -30,13 +30,13 @@ func (s Server) RunGRPC() error {
         reflection.Register(grpcServer)
     }
 
-    proto.RegisterApiServer(grpcServer, s)
+    api.RegisterApiServer(grpcServer, s)
 
     log.Info("starting grpc api on port:", strconv.Itoa(s.Port.GRPC))
     return grpcServer.Serve(lis)
 }
 
-func (s Server) GetAccount(c context.Context, req *proto.GetAccountRequest) (*proto.Account, error) {
+func (s Server) GetAccount(c context.Context, req *api.GetAccountRequest) (*api.Account, error) {
 	a, err := s.DB.AccountByID(req.AccountId)
     return &a, err
 }

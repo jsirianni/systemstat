@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/jsirianni/systemstat/internal/types/account"
-	"github.com/jsirianni/systemstat/internal/proto"
+	"github.com/jsirianni/systemstat/api"
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -116,7 +116,7 @@ func TestCreateAccount(t *testing.T) {
 		return
 	}
 
-	a := proto.Account{}
+	a := api.Account{}
 	if err := json.Unmarshal(body, &a); err != nil {
 		assert.Empty(t, err, "expected no errors when unmarshalling json response body into type Account")
 		return
@@ -154,7 +154,7 @@ func TestGetAccount(t *testing.T) {
 		return
 	}
 
-	a := proto.Account{}
+	a := api.Account{}
 	if err := json.Unmarshal(body, &a); err != nil {
 		assert.Empty(t, err, "expected no errors when unmarshalling json response body into type Account")
 		return

@@ -1,7 +1,7 @@
 package database
 
 import (
-    "github.com/jsirianni/systemstat/internal/proto"
+    "github.com/jsirianni/systemstat/api"
 )
 
 type Server struct {
@@ -11,5 +11,5 @@ type Server struct {
 	}
 	DB   Database
 
-	proto.UnimplementedApiServer
+	api.UnimplementedApiServer
 }

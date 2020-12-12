@@ -55,7 +55,7 @@ shellcheck:
 	shellcheck scripts/deploy/local/docker-compose.sh
 
 protobuf.generate:
-	cd internal/proto && \
+	cd api/ && \
 		protoc \
 			--go_out=. \
 			--go_opt=paths=source_relative \
