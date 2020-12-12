@@ -5,10 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/jsirianni/systemstat/internal/email"
 	"github.com/jsirianni/systemstat/internal/log"
 
-	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 )
@@ -36,14 +34,11 @@ func (s Server) status(resp http.ResponseWriter, req *http.Request) {
 }
 
 func (s Server) createTokenHandler(resp http.ResponseWriter, req *http.Request) {
-	t, err := s.DB.CreateToken()
+	t, err := s.createToken()
 	if err != nil {
-		log.Error(err)
 		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	log.Trace("token created:", t.Token)
 
 	resp.Header().Set("Content-Type", "application/json")
 	resp.WriteHeader(http.StatusCreated)
@@ -61,43 +56,11 @@ func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request
 		resp.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	const invalidtoken = "signup token is invalid"
-
-	if err := email.Validate(emailAddr); err != nil {
-		log.Debug(err)
-		http.Error(resp, "email addess is not valid", http.StatusUnprocessableEntity)
-		return
-	}
-
-	if _, err := uuid.Parse(token); err != nil {
-		log.Debug(err)
-		http.Error(resp, invalidtoken, http.StatusUnprocessableEntity)
-		return
-	}
-
-	// check if account exists first, err will not be nil if the account
-	// does not exist
-	if _, err := s.DB.AccountByEmail(emailAddr); err == nil {
-		log.Debug(errors.New("account already exists"))
+	account, err := s.createAccount(emailAddr, token)
+	if err != nil {
 		resp.WriteHeader(http.StatusConflict)
 		return
 	}
-
-	// claim the token before creating the account
-	if _, err := s.DB.ClaimToken(emailAddr, token); err != nil {
-		log.Debug(err)
-		http.Error(resp, invalidtoken, http.StatusUnprocessableEntity)
-		return
-	}
-
-	account, err := s.DB.AccountCreate(emailAddr, token)
-	if err != nil {
-		log.Error(err)
-		resp.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	log.Trace("account created:", emailAddr)
 
 	resp.Header().Set("Content-Type", "application/json")
 	resp.WriteHeader(http.StatusCreated)
@@ -115,19 +78,15 @@ func (s Server) getAccountHandler(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	genericErrContext := errors.New("getAccount: account_id " + id)
-
-	account, err := s.DB.AccountByID(id)
+	account, err := s.getAccount(id)
 	if err != nil {
-		log.Debug(errors.Wrap(err, genericErrContext.Error()))
 		resp.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	resp.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(resp).Encode(account); err != nil {
-		log.Error(errors.Wrap(err, genericErrContext.Error()))
+		log.Error(err)
 		return
 	}
-	log.Trace("getAccount: account retrieved:", id, account.AdminEmail)
 }
