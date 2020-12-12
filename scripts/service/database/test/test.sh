@@ -13,4 +13,4 @@ trap 'fail $LINENO' ERR
 
 ACCOUNT_ID=$(curl --fail -v -s "localhost:9000/v1/account/5131ff77-c66f-4002-9b4f-7ae7a4e426c9/user100@test.com" -XPOST | jq -r '.account_id')
 curl --fail -v -s "localhost:9000/v1/account/${ACCOUNT_ID}" -XGET
-grpcurl -d "{\"account_id\":\"${ACCOUNT_ID}\"}" -plaintext 127.0.0.1:9100 database.Api/GetAccount
+grpcurl -d "{\"account_id\":\"${ACCOUNT_ID}\"}" -plaintext 127.0.0.1:9100 proto.Api/GetAccount

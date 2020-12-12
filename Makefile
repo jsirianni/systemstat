@@ -16,7 +16,7 @@ build.control:
 	go build -o bin/ ./cmd/control
 build.alert:
 	go build -o bin/ ./cmd/alert
-build.database:
+build.database: protobuf.generate
 	go build -o bin/ ./cmd/database
 
 test: shellcheck
@@ -29,7 +29,7 @@ test.scripts:
 test.integration: clean test deploy.local test.scripts
 	source ./test.env && go test ./... -tags=integration
 
-docker-compose.build:
+docker-compose.build: protobuf.generate
 	docker-compose build --parallel
 docker-compose.deploy:
 	scripts/deploy/local/docker-compose.sh
@@ -54,12 +54,11 @@ shellcheck:
 	shellcheck scripts/service/alert/test/test.sh
 	shellcheck scripts/deploy/local/docker-compose.sh
 
-protobuf.generate: protobuf.generate.database
-protobuf.generate.database:
-	cd internal/service/database && \
+protobuf.generate:
+	cd internal/proto && \
 		protoc \
 			--go_out=. \
 			--go_opt=paths=source_relative \
-    		--go-grpc_out=. \
+			--go-grpc_out=. \
 			--go-grpc_opt=paths=source_relative \
-    		./api.proto
+			./api.proto

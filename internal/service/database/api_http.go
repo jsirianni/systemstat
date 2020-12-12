@@ -8,6 +8,7 @@ import (
 
 	"github.com/jsirianni/systemstat/internal/email"
 	"github.com/jsirianni/systemstat/internal/log"
+	"github.com/jsirianni/systemstat/internal/proto"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -23,6 +24,8 @@ type Server struct {
 		GRPC int
 	}
 	DB   Database
+
+	proto.UnimplementedApiServer
 }
 
 func init() {

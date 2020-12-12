@@ -9,28 +9,15 @@ import (
 
 
     "github.com/jsirianni/systemstat/internal/log"
+    "github.com/jsirianni/systemstat/internal/proto"
 
     "google.golang.org/grpc"
     "google.golang.org/grpc/reflection"
 )
 
-func (s Server) GetAccount(c context.Context, req *GetAccountRequest) (*GetAccountReply, error) {
+func (s Server) GetAccount(c context.Context, req *proto.GetAccountRequest) (*proto.GetAccountReply, error) {
 	a, err := s.DB.AccountByID(req.AccountId)
-	if err != nil {
-		return &GetAccountReply{}, nil
-	}
-
-	acct := GetAccountReply{}
-	acct.AccountId = a.AccountID.String()
-	acct.RootApiKey = a.RootAPIKey.String()
-	acct.AlertType = a.AlertType
-	acct.AdminEmail = a.AdminEmail
-	acct.AlertConfig, err = a.AlertConfig.JSON()
-	return &acct, err
-}
-
-func (s Server) mustEmbedUnimplementedApiServer() {
-	return
+    return &a, err
 }
 
 func (s Server) RunGRPC() error {
@@ -48,7 +35,7 @@ func (s Server) RunGRPC() error {
         reflection.Register(grpcServer)
     }
 
-    RegisterApiServer(grpcServer, s)
+    proto.RegisterApiServer(grpcServer, s)
 
     log.Info("starting grpc api on port:", strconv.Itoa(s.Port.GRPC))
     return grpcServer.Serve(lis)

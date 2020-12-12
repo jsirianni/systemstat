@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/jsirianni/systemstat/internal/types/account"
+	"github.com/jsirianni/systemstat/internal/proto"
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -115,14 +116,14 @@ func TestCreateAccount(t *testing.T) {
 		return
 	}
 
-	a := account.Account{}
+	a := proto.GetAccountReply{}
 	if err := json.Unmarshal(body, &a); err != nil {
 		assert.Empty(t, err, "expected no errors when unmarshalling json response body into type Account")
 		return
 	}
 
-	assert.NotEmpty(t, a.AccountID)
-	assert.NotEmpty(t, a.RootAPIKey)
+	assert.NotEmpty(t, a.AccountId)
+	assert.NotEmpty(t, a.RootApiKey)
 	assert.Equal(t, email, a.AdminEmail)
 
 	// try a second time
@@ -153,15 +154,15 @@ func TestGetAccount(t *testing.T) {
 		return
 	}
 
-	a := account.Account{}
+	a := proto.GetAccountReply{}
 	if err := json.Unmarshal(body, &a); err != nil {
 		assert.Empty(t, err, "expected no errors when unmarshalling json response body into type Account")
 		return
 	}
 
-	assert.NotEqual(t, id, a.AccountID)
-	assert.NotEmpty(t, a.RootAPIKey)
-	assert.Equal(t, email, a.AdminEmail)
+	assert.Equal(t, id, a.AccountId, string(body))
+	assert.NotEmpty(t, a.RootApiKey, string(body))
+	assert.Equal(t, email, a.AdminEmail, string(body))
 }
 
 func TestGetAccount404(t *testing.T) {
