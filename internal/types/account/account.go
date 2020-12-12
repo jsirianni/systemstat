@@ -14,11 +14,11 @@ type Account struct {
 	RootAPIKey uuid.UUID `db:"root_api_key" json:"root_api_key,omitempty"`
 
 	// The accounts alert type (slack, email, etc)
-	AlertType string `db:"alert_type" json:"alert_type,omitempty"`
+	AlertType string `db:"alert_type" json:"alert_type"`
 
 	// AlertConfig represents arbitrary json that will be marshalled
 	// into the given alert type's configuration
-	AlertConfig alertConfig `db:"alert_config" json:"alert_config,omitempty"`
+	AlertConfig alertConfig `db:"alert_config" json:"alert_config"`
 
 	// Primary contact for the account
 	AdminEmail string `db:"admin_email" json:"admin_email,omitempty"`

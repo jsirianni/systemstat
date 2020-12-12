@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "github.com/jsirianni/systemstat/internal/service/database";
+
+package database;
+
+service Api {
+  rpc GetAccount (GetAccountRequest) returns (GetAccountReply) {}
+}
+
+message GetAccountRequest {
+    string account_id = 1;
+}
+
+message GetAccountReply {
+    string account_id = 1;
+    string root_api_key = 2;
+    string alert_type = 3;
+    bytes alert_config = 4;
+    string admin_email = 5;
+}

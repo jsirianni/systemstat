@@ -29,7 +29,7 @@ func init() {
 func (s Server) Run() error {
 	port := strconv.Itoa(s.Port)
 
-	log.Info("starting database api on port:", port)
+	log.Info("starting http api on port:", port)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/status", s.status).Methods("GET")
