@@ -3,7 +3,6 @@ package database
 import (
 	"github.com/jsirianni/systemstat/internal/service/database/postgres"
 	"github.com/jsirianni/systemstat/api"
-	"github.com/jsirianni/systemstat/internal/types/account"
 )
 
 type Database interface {
@@ -26,13 +25,13 @@ type Database interface {
 	AccountConfigureAlert(alertType string, config []byte) (api.Account, error)
 
 	// claim a sign up token
-	ClaimToken(email, token string) (account.Token, error)
+	ClaimToken(email, token string) (api.Token, error)
 
 	// get an existing token
-	GetToken(token string) (account.Token, error)
+	GetToken(token string) (api.Token, error)
 
 	// create a signup token
-	CreateToken() (account.Token, error)
+	CreateToken() (api.Token, error)
 }
 
 func NewPostgres() (Database, error) {

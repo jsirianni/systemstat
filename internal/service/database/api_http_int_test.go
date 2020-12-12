@@ -11,7 +11,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jsirianni/systemstat/internal/types/account"
 	"github.com/jsirianni/systemstat/api"
 
 	"github.com/pkg/errors"
@@ -85,7 +84,7 @@ func TestCreateToken(t *testing.T) {
 		return
 	}
 
-	token := account.Token{}
+	token := api.Token{}
 	if err := json.Unmarshal(body, &token); err != nil {
 		assert.Empty(t, err, "expected no errors when unmarshalling json response body into type Token")
 		return
@@ -102,7 +101,7 @@ func TestCreateAccount(t *testing.T) {
 		return
 	}
 
-	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/"+ token.Token.String() + "/" + email
+	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/"+ token.Token + "/" + email
 	resp, err := http.Post(uri, "application/json", nil)
 	if err != nil {
 		assert.Empty(t, err)

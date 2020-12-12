@@ -1,4 +1,13 @@
-package account
+package alert
+
+/**
+
+TODO
+
+this package is not implemented, and will likely be structured similar to if not
+exactly like Relay's implementation: https://github.com/jsirianni/relay/tree/master/internal/alert
+
+**/
 
 import (
 	"database/sql/driver"

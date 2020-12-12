@@ -53,7 +53,7 @@ func (s Server) createTokenHandler(resp http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	log.Trace("token created:", t.Token.String())
+	log.Trace("token created:", t.Token)
 
 	resp.Header().Set("Content-Type", "application/json")
 	resp.WriteHeader(http.StatusCreated)

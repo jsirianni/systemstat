@@ -19,3 +19,9 @@ message Account {
     bytes alert_config = 4;
     string admin_email = 5;
 }
+
+message Token {
+    string token = 1;
+    bool claimed = 2;
+    string claimed_by = 3;
+}
