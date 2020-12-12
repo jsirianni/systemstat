@@ -17,16 +17,15 @@ func (s Server) RunHTTP() error {
 	log.Info("starting http api on port:", port)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/status", s.status).Methods("GET")
+	router.HandleFunc("/status", s.statusHandler).Methods("GET")
 	router.HandleFunc("/v1/account/token/create", s.createTokenHandler).Methods("POST")
 	router.HandleFunc("/v1/account/{account_id}", s.getAccountHandler).Methods("GET")
 	router.HandleFunc("/v1/account/{token}/{email}", s.createAccountHandler).Methods("POST")
 	return http.ListenAndServe(":"+port, router)
 }
 
-func (s Server) status(resp http.ResponseWriter, req *http.Request) {
-	if err := s.DB.TestConnection(); err != nil {
-		log.Error(err)
+func (s Server) statusHandler(resp http.ResponseWriter, req *http.Request) {
+	if _, err := s.status(); err != nil {
 		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}

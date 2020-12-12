@@ -17,6 +17,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ApiClient interface {
+	Status(ctx context.Context, in *HealthRequest, opts ...grpc.CallOption) (*Health, error)
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*Account, error)
 	CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...grpc.CallOption) (*Token, error)
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*Account, error)
@@ -28,6 +29,15 @@ type apiClient struct {
 
 func NewApiClient(cc grpc.ClientConnInterface) ApiClient {
 	return &apiClient{cc}
+}
+
+func (c *apiClient) Status(ctx context.Context, in *HealthRequest, opts ...grpc.CallOption) (*Health, error) {
+	out := new(Health)
+	err := c.cc.Invoke(ctx, "/api.Api/Status", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *apiClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*Account, error) {
@@ -61,6 +71,7 @@ func (c *apiClient) CreateAccount(ctx context.Context, in *CreateAccountRequest,
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
 type ApiServer interface {
+	Status(context.Context, *HealthRequest) (*Health, error)
 	GetAccount(context.Context, *GetAccountRequest) (*Account, error)
 	CreateToken(context.Context, *CreateTokenRequest) (*Token, error)
 	CreateAccount(context.Context, *CreateAccountRequest) (*Account, error)
@@ -71,6 +82,9 @@ type ApiServer interface {
 type UnimplementedApiServer struct {
 }
 
+func (UnimplementedApiServer) Status(context.Context, *HealthRequest) (*Health, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Status not implemented")
+}
 func (UnimplementedApiServer) GetAccount(context.Context, *GetAccountRequest) (*Account, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
 }
@@ -91,6 +105,24 @@ type UnsafeApiServer interface {
 
 func RegisterApiServer(s grpc.ServiceRegistrar, srv ApiServer) {
 	s.RegisterService(&_Api_serviceDesc, srv)
+}
+
+func _Api_Status_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HealthRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).Status(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Api/Status",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).Status(ctx, req.(*HealthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Api_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -151,6 +183,10 @@ var _Api_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "api.Api",
 	HandlerType: (*ApiServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Status",
+			Handler:    _Api_Status_Handler,
+		},
 		{
 			MethodName: "GetAccount",
 			Handler:    _Api_GetAccount_Handler,

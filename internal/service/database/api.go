@@ -21,6 +21,14 @@ type Server struct {
 	api.UnimplementedApiServer
 }
 
+func (s Server) status() (h api.Health, err error) {
+    err = s.DB.TestConnection()
+    if err != nil {
+        log.Error(err)
+    }
+    return
+}
+
 func (s Server) getAccount(id string) (api.Account, error) {
     a, err := s.DB.AccountByID(id)
     if err != nil {

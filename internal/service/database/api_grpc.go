@@ -35,6 +35,11 @@ func (s Server) RunGRPC() error {
     return grpcServer.Serve(lis)
 }
 
+func (s Server) Status(c context.Context, req *api.HealthRequest) (*api.Health, error) {
+    h, err := s.status()
+    return &h, err
+}
+
 func (s Server) GetAccount(c context.Context, req *api.GetAccountRequest) (*api.Account, error) {
 	a, err := s.getAccount(req.AccountId)
     return &a, err
