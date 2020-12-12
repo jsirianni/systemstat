@@ -63,3 +63,6 @@ protobuf.generate:
 			--go-grpc_out=. \
 			--go-grpc_opt=paths=source_relative \
 			./api.proto
+
+exec.postgres:
+	docker exec -it systemstat_postgres_1 bash
