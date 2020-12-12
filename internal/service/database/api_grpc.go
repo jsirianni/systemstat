@@ -15,11 +15,6 @@ import (
     "google.golang.org/grpc/reflection"
 )
 
-func (s Server) GetAccount(c context.Context, req *proto.GetAccountRequest) (*proto.GetAccountReply, error) {
-	a, err := s.DB.AccountByID(req.AccountId)
-    return &a, err
-}
-
 func (s Server) RunGRPC() error {
     lis, err := net.Listen("tcp", fmt.Sprintf(":%d", s.Port.GRPC))
     if err != nil {
@@ -39,4 +34,9 @@ func (s Server) RunGRPC() error {
 
     log.Info("starting grpc api on port:", strconv.Itoa(s.Port.GRPC))
     return grpcServer.Serve(lis)
+}
+
+func (s Server) GetAccount(c context.Context, req *proto.GetAccountRequest) (*proto.GetAccountReply, error) {
+	a, err := s.DB.AccountByID(req.AccountId)
+    return &a, err
 }

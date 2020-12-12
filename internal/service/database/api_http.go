@@ -8,7 +8,6 @@ import (
 
 	"github.com/jsirianni/systemstat/internal/email"
 	"github.com/jsirianni/systemstat/internal/log"
-	"github.com/jsirianni/systemstat/internal/proto"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -16,20 +15,10 @@ import (
 )
 
 // counter metrics exposed at /debug/vars
-var counts = expvar.NewMap("counters")
-
-type Server struct {
-	Port struct {
-		HTTP int
-		GRPC int
-	}
-	DB   Database
-
-	proto.UnimplementedApiServer
-}
+var httpCounts = expvar.NewMap("counters")
 
 func init() {
-	counts.Add("total_requests", 0)
+	httpCounts.Add("total_requests", 0)
 }
 
 func (s Server) RunHTTP() error {
@@ -75,7 +64,7 @@ func (s Server) createTokenHandler(resp http.ResponseWriter, req *http.Request) 
 }
 
 func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request) {
-	counts.Add("total_requests", 1)
+	httpCounts.Add("total_requests", 1)
 
 	emailAddr := mux.Vars(req)["email"]
 	token := mux.Vars(req)["token"]
@@ -131,7 +120,7 @@ func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request
 }
 
 func (s Server) getAccountHandler(resp http.ResponseWriter, req *http.Request) {
-	counts.Add("total_requests", 1)
+	httpCounts.Add("total_requests", 1)
 
 	id := mux.Vars(req)["account_id"]
 	if id == "" {
