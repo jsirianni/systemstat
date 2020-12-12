@@ -2,7 +2,6 @@ package database
 
 import (
 	"encoding/json"
-	"expvar"
 	"net/http"
 	"strconv"
 
@@ -14,13 +13,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-// counter metrics exposed at /debug/vars
-var httpCounts = expvar.NewMap("counters")
-
-func init() {
-	httpCounts.Add("total_requests", 0)
-}
-
 func (s Server) RunHTTP() error {
 	port := strconv.Itoa(s.Port.HTTP)
 
@@ -31,8 +23,6 @@ func (s Server) RunHTTP() error {
 	router.HandleFunc("/v1/account/token/create", s.createTokenHandler).Methods("POST")
 	router.HandleFunc("/v1/account/{account_id}", s.getAccountHandler).Methods("GET")
 	router.HandleFunc("/v1/account/{token}/{email}", s.createAccountHandler).Methods("POST")
-	// expvar runtime  metrics
-	router.Handle("/debug/vars", http.DefaultServeMux)
 	return http.ListenAndServe(":"+port, router)
 }
 
@@ -64,8 +54,6 @@ func (s Server) createTokenHandler(resp http.ResponseWriter, req *http.Request) 
 }
 
 func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request) {
-	httpCounts.Add("total_requests", 1)
-
 	emailAddr := mux.Vars(req)["email"]
 	token := mux.Vars(req)["token"]
 	if emailAddr == "" || token == "" {
@@ -120,8 +108,6 @@ func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request
 }
 
 func (s Server) getAccountHandler(resp http.ResponseWriter, req *http.Request) {
-	httpCounts.Add("total_requests", 1)
-
 	id := mux.Vars(req)["account_id"]
 	if id == "" {
 		log.Debug(errors.New("getAccount: client request missing 'account_id' variable"))
