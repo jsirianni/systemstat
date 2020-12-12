@@ -4,11 +4,7 @@ import (
     "context"
 )
 
-type ServerGRPC struct {
-	DB   Database
-}
-
-func (s ServerGRPC) GetAccount(c context.Context, req *GetAccountRequest) (*GetAccountReply, error) {
+func (s Server) GetAccount(c context.Context, req *GetAccountRequest) (*GetAccountReply, error) {
 	a, err := s.DB.AccountByID(req.AccountId)
 	if err != nil {
 		return &GetAccountReply{}, nil
@@ -23,6 +19,6 @@ func (s ServerGRPC) GetAccount(c context.Context, req *GetAccountRequest) (*GetA
 	return &acct, err
 }
 
-func (s ServerGRPC) mustEmbedUnimplementedApiServer() {
+func (s Server) mustEmbedUnimplementedApiServer() {
 	return
 }

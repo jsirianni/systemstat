@@ -86,7 +86,7 @@ func startGRPC(d *database.Database) {
 		log.Trace("GO_ENV=development detected, enabling GRPC reflection")
 		reflection.Register(grpcServer)
 	}
-	server := database.ServerGRPC{
+	server := database.Server{
 		DB: *d,
 	}
 	database.RegisterApiServer(grpcServer, server)
