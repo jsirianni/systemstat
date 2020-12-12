@@ -7,12 +7,12 @@ endif
 build: build.all
 
 build.all:
-	go build ./cmd/agent
-	go build ./cmd/cli
-	go build ./cmd/frontend
-	go build ./cmd/control
-	go build ./cmd/alert
-	go build ./cmd/database
+	go build -o bin/ ./cmd/agent
+	go build -o bin/ ./cmd/cli
+	go build -o bin/ ./cmd/frontend
+	go build -o bin/ ./cmd/control
+	go build -o bin/ ./cmd/alert
+	go build -o bin/ ./cmd/database
 
 test: shellcheck
 	go test ./...
@@ -35,7 +35,7 @@ fmt:
 
 clean:
 	docker-compose down --remove-orphans
-	rm -f agent alert frontend cli control database
+	rm -f bin/*
 
 shellcheck:
 	shellcheck scripts/postgres/initdb.sh
