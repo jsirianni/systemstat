@@ -5,7 +5,8 @@ option go_package = "github.com/jsirianni/systemstat/api";
 package api;
 
 service Api {
-  rpc GetAccount (GetAccountRequest) returns (Account) {}
+    rpc GetAccount (GetAccountRequest) returns (Account) {}
+    rpc CreateToken (CreateTokenRequest) returns (Token) {}
 }
 
 message GetAccountRequest {
@@ -18,6 +19,10 @@ message Account {
     string alert_type = 3;
     bytes alert_config = 4;
     string admin_email = 5;
+}
+
+message CreateTokenRequest {
+
 }
 
 message Token {

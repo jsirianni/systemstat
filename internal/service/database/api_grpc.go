@@ -40,3 +40,8 @@ func (s Server) GetAccount(c context.Context, req *api.GetAccountRequest) (*api.
 	a, err := s.DB.AccountByID(req.AccountId)
     return &a, err
 }
+
+func (s Server) CreateToken(ctx context.Context, in *api.CreateTokenRequest) (*api.Token, error) {
+    t, err := s.DB.CreateToken()
+    return &t, err
+}
