@@ -15,6 +15,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
+	"github.com/google/uuid"
 )
 
 var testIntServer Server
@@ -165,11 +166,19 @@ func TestGetAccount(t *testing.T) {
 }
 
 func TestGetAccount404(t *testing.T) {
-	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + randomEmail()
+	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + uuid.New().String()
 	resp, err := http.Get(uri)
 	if err != nil {
 		assert.Empty(t, err)
-		return
+		assert.Equal(t, 404, resp.StatusCode)
 	}
-	assert.Equal(t, 404, resp.StatusCode)
+}
+
+func TestGetAccount500(t *testing.T) {
+	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + "not_a_uuid"
+	resp, err := http.Get(uri)
+	if err != nil {
+		assert.Empty(t, err)
+		assert.Equal(t, 500, resp.StatusCode)
+	}
 }

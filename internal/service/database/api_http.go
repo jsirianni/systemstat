@@ -25,22 +25,23 @@ func (s Server) RunHTTP() error {
 }
 
 func (s Server) statusHandler(resp http.ResponseWriter, req *http.Request) {
-	if h, err := s.status(); err != nil {
+	h, err := s.status()
+	if err != nil {
 		resp.WriteHeader(int(h.HttpStatus))
 		return
 	}
-	resp.WriteHeader(http.StatusOK)
+	resp.WriteHeader(int(h.HttpStatus))
 }
 
 func (s Server) createTokenHandler(resp http.ResponseWriter, req *http.Request) {
 	t, err := s.createToken()
 	if err != nil {
-		resp.WriteHeader(http.StatusInternalServerError)
+		resp.WriteHeader(int(t.HttpStatus))
 		return
 	}
 
 	resp.Header().Set("Content-Type", "application/json")
-	resp.WriteHeader(http.StatusCreated)
+	resp.WriteHeader(int(t.HttpStatus))
 	if err := json.NewEncoder(resp).Encode(t); err != nil {
 		log.Error(err)
 		return
@@ -57,12 +58,12 @@ func (s Server) createAccountHandler(resp http.ResponseWriter, req *http.Request
 	}
 	account, err := s.createAccount(emailAddr, token)
 	if err != nil {
-		resp.WriteHeader(http.StatusConflict)
+		resp.WriteHeader(int(account.HttpStatus))
 		return
 	}
 
 	resp.Header().Set("Content-Type", "application/json")
-	resp.WriteHeader(http.StatusCreated)
+	resp.WriteHeader(int(account.HttpStatus))
 	if err := json.NewEncoder(resp).Encode(account); err != nil {
 		log.Error(err)
 		return
@@ -79,11 +80,12 @@ func (s Server) getAccountHandler(resp http.ResponseWriter, req *http.Request) {
 
 	account, err := s.getAccount(id)
 	if err != nil {
-		resp.WriteHeader(http.StatusNotFound)
+		resp.WriteHeader(int(account.HttpStatus))
 		return
 	}
 
 	resp.Header().Set("Content-Type", "application/json")
+	resp.WriteHeader(int(account.HttpStatus))
 	if err := json.NewEncoder(resp).Encode(account); err != nil {
 		log.Error(err)
 		return
