@@ -4,13 +4,13 @@ package database
 
 import (
 	"net"
-    "net/http"
+	"net/http"
 	"strconv"
 	"testing"
 	"time"
 
 	"github.com/pkg/errors"
-    "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 var testIntServer Server
@@ -56,36 +56,36 @@ func randomEmail() string {
 }
 
 func TestStatus(t *testing.T) {
-    h, err := testIntServer.status()
-    if err != nil {
-        assert.Empty(t, err, "make sure the test server is running")
-        return
-    }
-    assert.Equal(t, http.StatusOK, int(h.HttpStatus))
+	h, err := testIntServer.status()
+	if err != nil {
+		assert.Empty(t, err, "make sure the test server is running")
+		return
+	}
+	assert.Equal(t, http.StatusOK, int(h.HttpStatus))
 }
 
 func TestGetAccount(t *testing.T) {
-    id := "0234c572-15ec-4e67-9081-6a1c42a00090"
-    email := "integration@test.com"
+	id := "0234c572-15ec-4e67-9081-6a1c42a00090"
+	email := "integration@test.com"
 
-    a, err := testIntServer.getAccount(id)
-    if err != nil {
-        assert.Empty(t, err)
-        return
-    }
-    assert.Equal(t, id, a.AccountId)
-    assert.Equal(t, email, a.AdminEmail)
-    assert.Equal(t, 200, int(a.HttpStatus))
+	a, err := testIntServer.getAccount(id)
+	if err != nil {
+		assert.Empty(t, err)
+		return
+	}
+	assert.Equal(t, id, a.AccountId)
+	assert.Equal(t, email, a.AdminEmail)
+	assert.Equal(t, 200, int(a.HttpStatus))
 }
 
 func TestGetAccount404(t *testing.T) {
-    id := "00000000-15ec-4e67-9081-6a1c42a00090"
-    a, err := testIntServer.getAccount(id)
-    if err != nil {
-        assert.Equal(t, 404, int(a.HttpStatus))
-        return
-    }
-    assert.Empty(t, err, "epected an error and 404 when getAccount is given a uuid that is not in the system")
+	id := "00000000-15ec-4e67-9081-6a1c42a00090"
+	a, err := testIntServer.getAccount(id)
+	if err != nil {
+		assert.Equal(t, 404, int(a.HttpStatus))
+		return
+	}
+	assert.Empty(t, err, "epected an error and 404 when getAccount is given a uuid that is not in the system")
 }
 
 // TODO: finish tests - createToken

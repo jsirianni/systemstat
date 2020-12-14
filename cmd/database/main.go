@@ -31,7 +31,6 @@ func main() {
 	server.Port.GRPC = grpcPort
 	server.DB = d
 
-
 	go startHTTP(&server)
 	go startGRPC(&server)
 

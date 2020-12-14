@@ -11,8 +11,8 @@ import (
 
 	"github.com/jsirianni/systemstat/api"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStatusHTTP(t *testing.T) {
@@ -57,7 +57,7 @@ func TestCreateAccountHTTP(t *testing.T) {
 		return
 	}
 
-	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/"+ token.Token + "/" + email
+	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + token.Token + "/" + email
 	resp, err := http.Post(uri, "application/json", nil)
 	if err != nil {
 		assert.Empty(t, err)
