@@ -5,62 +5,17 @@ package database
 import (
 	"encoding/json"
 	"io/ioutil"
-	"net"
 	"net/http"
 	"strconv"
 	"testing"
-	"time"
 
 	"github.com/jsirianni/systemstat/api"
 
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/google/uuid"
 )
 
-var testIntServer Server
-
-const testIntServerHost = "localhost"
-const testIntServerPort = 19000
-
-func init() {
-	db, err := NewPostgres()
-	if err != nil {
-		panic(err)
-	}
-
-	testIntServer.Port.HTTP = testIntServerPort
-	testIntServer.DB = db
-
-	// run the server on a goroutine and then sleep two seconds
-	// to make sure the server is running.
-	go testIntServer.RunHTTP()
-	if err := testConnect(); err != nil {
-		panic(err)
-	}
-}
-
-func testConnect() error {
-	host := net.JoinHostPort(testIntServerHost, strconv.Itoa(testIntServerPort))
-	attempts := 0
-	for {
-		_, err := net.DialTimeout("tcp", host, time.Second)
-		if err == nil {
-			break
-		}
-		if attempts > 3 {
-			return errors.Wrap(err, "server failed to start on "+host)
-		}
-		time.Sleep(1)
-	}
-	return nil
-}
-
-func randomEmail() string {
-	return strconv.FormatInt(time.Now().UTC().UnixNano(), 10) + "@test.com"
-}
-
-func TestStatus(t *testing.T) {
+func TestStatusHTTP(t *testing.T) {
 	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/status"
 	resp, err := http.Get(uri)
 	if err != nil {
@@ -70,7 +25,7 @@ func TestStatus(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 }
 
-func TestCreateToken(t *testing.T) {
+func TestCreateTokenHTTP(t *testing.T) {
 	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/token/create"
 	resp, err := http.Post(uri, "application/json", nil)
 	if err != nil {
@@ -94,7 +49,7 @@ func TestCreateToken(t *testing.T) {
 	assert.NotEmpty(t, token.Token)
 }
 
-func TestCreateAccount(t *testing.T) {
+func TestCreateAccountHTTP(t *testing.T) {
 	email := randomEmail()
 	token, err := testIntServer.DB.CreateToken()
 	if err != nil {
@@ -135,7 +90,7 @@ func TestCreateAccount(t *testing.T) {
 	assert.Equal(t, 409, resp.StatusCode)
 }
 
-func TestGetAccount(t *testing.T) {
+func TestGetAccountHTTP(t *testing.T) {
 	// id is from scripts/postgres/test_data.sql
 	id := "0234c572-15ec-4e67-9081-6a1c42a00090"
 	email := "integration@test.com"
@@ -165,7 +120,7 @@ func TestGetAccount(t *testing.T) {
 	assert.Equal(t, email, a.AdminEmail, string(body))
 }
 
-func TestGetAccount404(t *testing.T) {
+func TestGetAccount404HTTP(t *testing.T) {
 	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + uuid.New().String()
 	resp, err := http.Get(uri)
 	if err != nil {
@@ -174,7 +129,7 @@ func TestGetAccount404(t *testing.T) {
 	}
 }
 
-func TestGetAccount500(t *testing.T) {
+func TestGetAccount500HTTP(t *testing.T) {
 	uri := "http://localhost:" + strconv.Itoa(testIntServerPort) + "/v1/account/" + "not_a_uuid"
 	resp, err := http.Get(uri)
 	if err != nil {
