@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/jsirianni/systemstat/api"
+	"github.com/jsirianni/systemstat/internal/service/database/api"
 	"github.com/jsirianni/systemstat/internal/log"
 
 	"google.golang.org/grpc"

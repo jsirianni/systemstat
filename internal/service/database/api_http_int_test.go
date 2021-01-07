@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/jsirianni/systemstat/api"
+	"github.com/jsirianni/systemstat/internal/service/database/api"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"

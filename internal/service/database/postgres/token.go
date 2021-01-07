@@ -3,7 +3,7 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/jsirianni/systemstat/api"
+	"github.com/jsirianni/systemstat/internal/service/database/api"
 
 	"github.com/pkg/errors"
 )
