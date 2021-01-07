@@ -1,7 +1,6 @@
 package frontend
 
 import (
-	"expvar"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -12,18 +11,11 @@ import (
 	"github.com/pkg/errors"
 )
 
-// counter metrics exposed at /debug/vars
-var counts = expvar.NewMap("counters")
-
 type Server struct {
 	Port     int
 	Database struct {
 		Endpoint string
 	}
-}
-
-func init() {
-	counts.Add("total_requests", 0)
 }
 
 func (s Server) Run() error {
