@@ -1,14 +1,15 @@
 package frontend
 
 import (
-	"fmt"
+	//"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/jsirianni/systemstat/internal/log"
+	//"github.com/jsirianni/systemstat/internal/service/database/api"
 
 	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
+	//"github.com/pkg/errors"
 )
 
 type Server struct {
@@ -25,13 +26,11 @@ func (s Server) Run() error {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/status", s.status).Methods("GET")
-	// expvar runtime  metrics
-	router.Handle("/debug/vars", http.DefaultServeMux)
 	return http.ListenAndServe(":"+port, router)
 }
 
 func (s Server) status(resp http.ResponseWriter, req *http.Request) {
-	backendStatus, err := http.Get(s.Database.Endpoint + "/status")
+/*	backendStatus, err := http.Get(s.Database.Endpoint + "/status")
 	if err != nil {
 		log.Error(err)
 		resp.WriteHeader(http.StatusInternalServerError)
@@ -44,6 +43,6 @@ func (s Server) status(resp http.ResponseWriter, req *http.Request) {
 		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+*/
 	resp.WriteHeader(http.StatusOK)
 }

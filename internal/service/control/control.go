@@ -2,14 +2,14 @@ package control
 
 import (
 	"expvar"
-	"fmt"
+	//"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/jsirianni/systemstat/internal/log"
 
 	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
+	//"github.com/pkg/errors"
 )
 
 // counter metrics exposed at /debug/vars
@@ -39,7 +39,7 @@ func (s Server) Run() error {
 }
 
 func (s Server) status(resp http.ResponseWriter, req *http.Request) {
-	backendStatus, err := http.Get(s.Database.Endpoint + "/status")
+/*	backendStatus, err := http.Get(s.Database.Endpoint + "/status")
 	if err != nil {
 		log.Error(err)
 		resp.WriteHeader(http.StatusInternalServerError)
@@ -52,6 +52,6 @@ func (s Server) status(resp http.ResponseWriter, req *http.Request) {
 		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+*/
 	resp.WriteHeader(http.StatusOK)
 }
