@@ -9,14 +9,14 @@ import (
 )
 
 const defaultPort = 9090
-const defaultEndpoint = "http://database:9000"
+const defaultEndpoint = "database:9100"
 
 var port int
 var endpoint string
 
 func main() {
 	flag.IntVar(&port, "port", defaultPort, "port to use for http server")
-	flag.StringVar(&endpoint, "endpoint", defaultEndpoint, "backend database api endpoint")
+	flag.StringVar(&endpoint, "database=grpc", defaultEndpoint, "database grpc endpoint")
 	flag.Parse()
 
 	server := frontend.Server{}

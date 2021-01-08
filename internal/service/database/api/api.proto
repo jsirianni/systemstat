@@ -5,7 +5,7 @@ option go_package = "github.com/jsirianni/systemstat/internal/service/database/a
 package api;
 
 service Api {
-    rpc Status (HealthRequest) returns (Health) {}
+    rpc HealthCheck (HealthRequest) returns (Health) {}
     rpc GetAccount (GetAccountRequest) returns (Account) {}
     rpc CreateToken (CreateTokenRequest) returns (Token) {}
     rpc CreateAccount (CreateAccountRequest) returns (Account) {}

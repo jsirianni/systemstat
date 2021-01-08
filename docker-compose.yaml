@@ -10,6 +10,7 @@ services:
         buildno: 1
     environment:
       SYSTEMSTAT_LOG_LEVEL: TRACE
+      SYSTEMSTAT_ADMIN_TOKEN: 419fad08-4222-47ec-a7a8-af6586d851ed
     ports:
       - 9090:9090
     healthcheck:
@@ -76,11 +77,8 @@ services:
       DATABASE_PASSWORD: postgres
       SYSTEMSTAT_LOG_LEVEL: TRACE
       GO_ENV: "development"
-      HTTP_PORT: "9000"
       GRPC_PORT: "9100"
     ports:
-      # http
-      - 9000:9000
       # grpc
       - 9100:9100
     healthcheck:

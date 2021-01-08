@@ -46,8 +46,8 @@ func (s Server) RunGRPC() error {
 	return grpcServer.Serve(lis)
 }
 
-func (s Server) Status(c context.Context, req *api.HealthRequest) (*api.Health, error) {
-	h, err := s.status()
+func (s Server) HealthCheck(c context.Context, req *api.HealthRequest) (*api.Health, error) {
+	h, err := s.health()
 	return &h, err
 }
 
@@ -66,7 +66,7 @@ func (s Server) CreateAccount(ctx context.Context, req *api.CreateAccountRequest
 	return &account, err
 }
 
-func (s Server) status() (h api.Health, err error) {
+func (s Server) health() (h api.Health, err error) {
 	err = s.DB.TestConnection()
 	if err != nil {
 		log.Error(err)
