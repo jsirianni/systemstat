@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option go_package = "github.com/jsirianni/systemstat/internal/service/frontend/api";
+option go_package = "github.com/jsirianni/systemstat/internal/service/frontend";
 
-package api;
+package frontend;
 
 service Api {
     rpc GetAccount (GetAccountRequest) returns (Account) {}

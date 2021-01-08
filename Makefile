@@ -67,7 +67,7 @@ service.database.protobuf.generate:
 			./api.proto
 
 service.frontend.protobuf.generate:
-	@cd internal/service/frontend/api/ && \
+	@cd internal/service/frontend/ && \
 		protoc \
 			--go_out=. \
 			--go_opt=paths=source_relative \
