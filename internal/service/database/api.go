@@ -108,7 +108,8 @@ func (s Server) createAccount(emailAddr, token string) (account api.Account, err
 	// check if account exists first, err will not be nil if the account
 	// does not exist
 	if a, err := s.DB.AccountByEmail(emailAddr); err == nil {
-		log.Debug(errors.New(fmt.Sprintf("account with email address %s already exists with account_id %s", emailAddr, a.AccountId)))
+		err := errors.New(fmt.Sprintf("account with email address %s already exists with account_id %s", emailAddr, a.AccountId))
+		log.Debug(err)
 		return account, err
 	}
 

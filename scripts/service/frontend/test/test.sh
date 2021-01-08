@@ -18,7 +18,13 @@ curl --fail -v -s \
     "localhost:9090/v1/account?account=0234c572-15ec-4e67-9081-6a1c42a00090"
 
 # account id is defined in scripts/postgres/initdb.sql
-curl --fail -v -s \
+TOKEN=$(curl --fail -v -s \
     -H "X-Api-Key: ${ADMIN_TOKEN}" \
     -X POST \
-    "localhost:9090/v1/token"
+    "localhost:9090/v1/token" | jq -r .token)
+
+# account id is defined in scripts/postgres/initdb.sql
+curl --fail -v -s \
+    -X POST \
+    -d "{\"token\":\"${TOKEN}\",\"email\":\"test2@test.com\"}" \
+    "localhost:9090/v1/account"
