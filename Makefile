@@ -55,10 +55,19 @@ shellcheck:
 	shellcheck scripts/service/alert/test/test.sh
 	shellcheck scripts/deploy/local/docker-compose.sh
 
-protobuf.generate: service.database.protobuf.generate
+protobuf.generate: service.database.protobuf.generate service.frontend.protobuf.generate
 
 service.database.protobuf.generate:
-	@cd internal/service/database/api/ && \
+	@cd internal/service/database/ && \
+		protoc \
+			--go_out=. \
+			--go_opt=paths=source_relative \
+			--go-grpc_out=. \
+			--go-grpc_opt=paths=source_relative \
+			./api.proto
+
+service.frontend.protobuf.generate:
+	@cd internal/service/frontend/api/ && \
 		protoc \
 			--go_out=. \
 			--go_opt=paths=source_relative \

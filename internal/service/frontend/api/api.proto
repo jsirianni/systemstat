@@ -1,22 +1,13 @@
 syntax = "proto3";
 
-option go_package = "github.com/jsirianni/systemstat/internal/service/database/api";
+option go_package = "github.com/jsirianni/systemstat/internal/service/frontend/api";
 
 package api;
 
 service Api {
-    rpc HealthCheck (HealthRequest) returns (Health) {}
     rpc GetAccount (GetAccountRequest) returns (Account) {}
     rpc CreateToken (CreateTokenRequest) returns (Token) {}
     rpc CreateAccount (CreateAccountRequest) returns (Account) {}
-}
-
-message HealthRequest {
-
-}
-
-message Health {
-
 }
 
 message CreateAccountRequest {

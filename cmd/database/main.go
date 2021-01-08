@@ -6,6 +6,7 @@ import (
 
 	"github.com/jsirianni/systemstat/internal/log"
 	"github.com/jsirianni/systemstat/internal/service/database"
+	"github.com/jsirianni/systemstat/internal/service/database/postgres"
 )
 
 var grpcPort int
@@ -16,7 +17,7 @@ func main() {
 	flag.Set("stderrthreshold", "WARNING")
 	flag.Parse()
 
-	d, err := database.NewPostgres()
+	d, err := postgres.New()
 	if err != nil {
 		log.Fatal(err, 100)
 	}
