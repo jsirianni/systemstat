@@ -27,7 +27,7 @@ func main() {
 	server.Port.GRPC = grpcPort
 	server.Database.Endpoint = endpoint
 
-	if err := server.Run(); err != nil {
+	if err := server.Server(); err != nil {
 		log.Fatal(err, 1)
 		os.Exit(1)
 	}

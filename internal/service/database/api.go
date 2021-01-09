@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/jsirianni/systemstat/api"
 	"github.com/jsirianni/systemstat/internal/email"
 	"github.com/jsirianni/systemstat/internal/log"
 
@@ -21,7 +22,7 @@ type Server struct {
 	}
 	DB Database
 
-	UnimplementedApiServer
+	api.UnimplementedDatabaseServer
 }
 
 func (s Server) RunGRPC() error {
@@ -39,33 +40,33 @@ func (s Server) RunGRPC() error {
 		reflection.Register(grpcServer)
 	}
 
-	RegisterApiServer(grpcServer, s)
+	api.RegisterDatabaseServer(grpcServer, s)
 
 	log.Info("starting grpc api on port:", strconv.Itoa(s.Port.GRPC))
 	return grpcServer.Serve(lis)
 }
 
-func (s Server) HealthCheck(c context.Context, req *HealthRequest) (*Health, error) {
+func (s Server) HealthCheck(c context.Context, req *api.HealthRequest) (*api.Health, error) {
 	h, err := s.health()
 	return &h, err
 }
 
-func (s Server) GetAccount(c context.Context, req *GetAccountRequest) (*Account, error) {
+func (s Server) GetAccount(c context.Context, req *api.GetAccountRequest) (*api.Account, error) {
 	a, err := s.getAccount(req.AccountId)
 	return &a, err
 }
 
-func (s Server) CreateToken(ctx context.Context, req *CreateTokenRequest) (*Token, error) {
+func (s Server) CreateToken(ctx context.Context, req *api.CreateTokenRequest) (*api.Token, error) {
 	t, err := s.createToken()
 	return &t, err
 }
 
-func (s Server) CreateAccount(ctx context.Context, req *CreateAccountRequest) (*Account, error) {
+func (s Server) CreateAccount(ctx context.Context, req *api.CreateAccountRequest) (*api.Account, error) {
 	account, err := s.createAccount(req.Email, req.Token)
 	return &account, err
 }
 
-func (s Server) health() (h Health, err error) {
+func (s Server) health() (h api.Health, err error) {
 	err = s.DB.TestConnection()
 	if err != nil {
 		log.Error(err)
@@ -74,7 +75,7 @@ func (s Server) health() (h Health, err error) {
 	return
 }
 
-func (s Server) getAccount(id string) (Account, error) {
+func (s Server) getAccount(id string) (api.Account, error) {
 	a, err := s.DB.AccountByID(id)
 	if err != nil {
 		log.Debug(err)
@@ -84,7 +85,7 @@ func (s Server) getAccount(id string) (Account, error) {
 	return a, nil
 }
 
-func (s Server) createToken() (Token, error) {
+func (s Server) createToken() (api.Token, error) {
 	t, err := s.DB.CreateToken()
 	if err != nil {
 		log.Error(err)
@@ -94,7 +95,7 @@ func (s Server) createToken() (Token, error) {
 	return t, nil
 }
 
-func (s Server) createAccount(emailAddr, token string) (account Account, err error) {
+func (s Server) createAccount(emailAddr, token string) (account api.Account, err error) {
 	log.Trace(fmt.Sprintf("createAccount: requested creation: email=%s token=%s", emailAddr, token))
 
 	const invalidtoken = "signup token is invalid"

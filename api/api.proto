@@ -1,10 +1,17 @@
 syntax = "proto3";
 
-option go_package = "github.com/jsirianni/systemstat/internal/service/database";
+option go_package = "github.com/jsirianni/systemstat/api";
 
-package database;
+package api;
 
-service Api {
+service Database {
+    rpc HealthCheck (HealthRequest) returns (Health) {}
+    rpc GetAccount (GetAccountRequest) returns (Account) {}
+    rpc CreateToken (CreateTokenRequest) returns (Token) {}
+    rpc CreateAccount (CreateAccountRequest) returns (Account) {}
+}
+
+service Frontend {
     rpc HealthCheck (HealthRequest) returns (Health) {}
     rpc GetAccount (GetAccountRequest) returns (Account) {}
     rpc CreateToken (CreateTokenRequest) returns (Token) {}
@@ -19,13 +26,21 @@ message Health {
 
 }
 
+/**
+
+manage accounts
+
+**/
 message CreateAccountRequest {
     string token = 1;
     string email = 2;
 }
 
 message GetAccountRequest {
-    string account_id = 1;
+    // authentication
+    string api_key    = 1;
+
+    string account_id = 2;
 }
 
 message Account {
@@ -36,8 +51,14 @@ message Account {
     string admin_email = 5;
 }
 
-message CreateTokenRequest {
+/**
 
+create signup token
+
+**/
+message CreateTokenRequest {
+    // authentication
+    string api_key    = 1;
 }
 
 message Token {

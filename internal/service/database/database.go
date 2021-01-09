@@ -1,5 +1,9 @@
 package database
 
+import (
+	"github.com/jsirianni/systemstat/api"
+)
+
 type Database interface {
 	// Validate the database configuration
 	Validate() error
@@ -8,23 +12,23 @@ type Database interface {
 	TestConnection() error
 
 	// Create an account
-	AccountCreate(email, token string) (Account, error)
+	AccountCreate(email, token string) (api.Account, error)
 
 	// Retrieve an account by account_id
-	AccountByID(id string) (Account, error)
+	AccountByID(id string) (api.Account, error)
 
 	// Retrieve an account by email
-	AccountByEmail(email string) (Account, error)
+	AccountByEmail(email string) (api.Account, error)
 
 	// Configure an accounts alert type
-	AccountConfigureAlert(alertType string, config []byte) (Account, error)
+	AccountConfigureAlert(alertType string, config []byte) (api.Account, error)
 
 	// claim a sign up token
-	ClaimToken(email, token string) (Token, error)
+	ClaimToken(email, token string) (api.Token, error)
 
 	// get an existing token
-	GetToken(token string) (Token, error)
+	GetToken(token string) (api.Token, error)
 
 	// create a signup token
-	CreateToken() (Token, error)
+	CreateToken() (api.Token, error)
 }
